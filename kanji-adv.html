@@ -31,6 +31,8 @@ button.g{background:linear-gradient(#58d68d,#27ae60)}button.b{background:linear-
 .pt{position:fixed;pointer-events:none;font-size:30px;animation:up 1s ease-out forwards;z-index:9}@keyframes up{to{transform:translate(var(--x),-170px) rotate(360deg);opacity:0}}
 .shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 .fb.ok{font-size:30px}.card{box-shadow:0 4px 0 rgba(0,0,0,.08)}
+.ac{position:absolute;top:-10px;right:-8px;font-size:28px}.col b.s3{animation:tw 2s ease-in-out infinite}@keyframes tw{50%{box-shadow:0 0 14px 3px #ffd84d}}.col b.s2{box-shadow:0 0 0 2px #fff inset}button[disabled]{cursor:default}
+.bub{display:flex;gap:10px;align-items:center;background:var(--card);border:3px solid #ffb6d9;border-radius:18px;padding:10px;margin:8px 0}.bf{font-size:40px;animation:fl 2.6s ease-in-out infinite}
 </style></head><body><div id="app"></div>
 <script>
 /* ===== データ: 添付PDFの掲載語から1漢字につき1語を抽出(漢字 語 よみ)。先頭*は送り仮名つき。語句はPDF記載のもののみ ===== */
@@ -44,14 +46,16 @@ if(TR.length!=K.length)console.warn('TR数が合いません',TR.length,K.length
 /* ===== 保存 ===== */
 const $=id=>document.getElementById(id),app=$('app'),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let S,mem=true,G;
-const def=()=>({name:'',lv:1,xp:0,items:{},wrong:[],q:{d:'',c:0,w:0,o:0},done:{},boss:'',set:{snd:true,g:'12'}});
+const def=()=>({name:'',lv:1,xp:0,items:{},wrong:[],q:{d:'',c:0,w:0,o:0},done:{},boss:'',cc:0,food:0,bond:0,acc:'',cm:[],ev:0,coin:0,pet:0,own:[0],set:{snd:true,g:'12'}});
 function load(){try{S=Object.assign(def(),JSON.parse(localStorage.getItem('kj1')))}catch(e){S=def();mem=false}}
 function save(){try{localStorage.setItem('kj1',JSON.stringify(S))}catch(e){mem=false}}
 const today=()=>new Date().toISOString().slice(0,10),need=()=>S.lv*60;
 const TT=['みならい','かんじ ひろいびと','かんじ たんけんか','もじ ぼうけんか','かんじ きし','かんじ はかせ','かんじ たつじん','かんじ でんせつ'];
 const title=()=>TT[Math.min(TT.length-1,(S.lv-1)>>1)];
 let ac;function snd(f,d=.12){if(!S.set.snd)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.07;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
-const AV=['🥚','🐣','🐥','🦊','🐲','🦄','🌟','👑'];
+const pface=st=>{const p=PETS[S.pet]||PETS[0];return p.s[Math.min(p.s.length-1,Math.floor(st/2))]};
+const cur=()=>pface(Math.min(7,(S.lv-1)>>1));
+const AV=new Proxy([],{get:(t,k)=>k=='length'?8:(typeof k=='string'?pface(+k):undefined)});
 function burst(e,n){for(let i=0;i<n;i++){const s=document.createElement('span');s.className='pt';s.textContent=e;s.style.left=(15+Math.random()*70)+'vw';s.style.top=(35+Math.random()*25)+'vh';s.style.setProperty('--x',(Math.random()*180-90)+'px');document.body.appendChild(s);setTimeout(()=>s.remove(),1000)}}
 function shk(){app.classList.remove('shake');void app.offsetWidth;app.classList.add('shake')}
 const hira=s=>s.replace(/[ァ-ン]/g,c=>String.fromCharCode(c.charCodeAt(0)-96)).replace(/\s/g,'');
@@ -62,12 +66,12 @@ function qday(){if(S.q.d!=today())S.q={d:today(),c:0,w:0,o:0}}
 /* ===== ホーム ===== */
 function home(){qday();const pool=Object.keys(S.items).length;
 app.innerHTML=`${mem?'':'<div class="card ng">⚠ ほぞんできません。きろくは このページを とじると きえます</div>'}
-<div class="hero"><div class="av">${AV[Math.min(AV.length-1,(S.lv-1)>>1)]}</div><div><div style="font-size:22px"><b>${esc(S.name||'なまえ')}</b></div><div>Lv${S.lv} 「${title()}」</div></div><button class="n" data-a="set" style="margin-left:auto">⚙</button></div>
-<div class="bar"><i style="width:${S.xp/need()*100}%"></i></div><small>つぎのレベルまで あと ${need()-S.xp}XP</small>
+<div class="hero"><div class="av" data-a="pet" style="position:relative">${AV[Math.min(AV.length-1,(S.lv-1)>>1)]}<span class="ac">${S.acc||''}</span></div><div><div style="font-size:22px"><b>${esc(S.name||'なまえ')}</b></div><div>Lv${S.lv} 「${title()}」</div></div><button class="n" data-a="set" style="margin-left:auto">⚙</button></div>
+<div class="bar"><i style="width:${S.xp/need()*100}%"></i></div><small>つぎのレベルまで あと ${need()-S.xp}XP</small>${homeBub()}
 ${S.name?'':'<div class="card">なまえを いれてね<input id="nm" maxlength="10"><button class="g" data-a="nm" style="margin-top:8px">けってい</button></div>'}
 <div class="grid" style="margin-top:12px"><button class="mb" data-a="go" data-v="r"><span>👀</span>よみマスター</button><button class="mb g" data-a="go" data-v="w"><span>✏️</span>かきマスター</button><button class="mb b" data-a="go" data-v="o"><span>🔤</span>おくりがな</button><button class="mb" data-a="go" data-v="x" style="background:linear-gradient(#c58bff,#8a4fe8)"><span>🎲</span>まぜまぜ</button><button class="mb r" data-a="go" data-v="e"><span>🔥</span>まちがいリベンジ(${S.wrong.length})</button><button class="mb" data-a="go" data-v="boss" style="background:linear-gradient(#3b3b5c,#14142b)"><span>👹</span>ボス ${S.lv<3?'🔒Lv3':''}</button></div>
 <div class="card"><b>きょうのクエスト</b>${QS.map((q,i)=>`<div>${S.done['q'+i]==today()?'✅':'⬜'} ${q.t} <small>${Math.min(S.q[q.k],q.n)}/${q.n}</small></div>`).join('')}</div>
-<button class="g" style="width:100%" data-a="col">📖 かんじコレクション (${Object.keys(S.items).filter(k=>k.endsWith('r')).length}/${K.length})</button>`}
+<button style="width:100%;margin-bottom:8px;background:linear-gradient(#ff9ad5,#e45aa8)" data-a="pet">🐾 なかま (🍙${S.food} 🪙${S.coin})</button><button class="g" style="width:100%" data-a="col">📖 かんじコレクション (${Object.keys(S.items).filter(k=>k.endsWith('r')).length}/${K.length})</button>`}
 
 /* ===== 出題 ===== */
 function pick(){const now=Date.now(),cs=[];
@@ -80,7 +84,7 @@ if(m=='e')list=S.wrong.map(s=>[K[parseInt(s)],s.slice(-1)]);
 else if(m=='boss'){list=Object.keys(S.items).filter(s=>S.items[s].ok>0).map(s=>[K[parseInt(s)],s.slice(-1)]);if(S.lv<3||list.length<15)return toast('ボスは Lv3いじょう、15もん せいかいしてから！')}
 else for(const k of pool)for(const t of ty)if(t!='o'||k.o)list.push([k,t]);
 if(!list.length)return toast('まちがいは ありません！すごい！');
-G={m,N:Math.min(10,list.length),n:0,ok:0,combo:0,max:0,xp:0,newl:[],wr:[],used:new Set(),list,lvUp:false};ask()}
+G={m,N:Math.min(10,list.length),n:0,ok:0,combo:0,max:0,xp:0,newl:[],mast:[],wr:[],used:new Set(),list,lvUp:false};ask()}
 function toast(s){alert(s)}
 function ask(){if(G.n>=G.N)return result();const q=pick();if(!q)return result();G.cur=q;G.n++;G.done=false;const[k,t]=q,key=k.id+t,i=S.items[key]||{ng:0};
 const head=`<div class="top"><button class="n" data-a="home">✕</button><div>${G.m=='boss'?'👹 ':''}${G.n}/${G.N} ${G.combo>1?`<b class="pop">🔥${G.combo}コンボ</b>`:''}</div></div><div class="bar"><i style="width:${(G.n-1)/G.N*100}%"></i></div>`;
@@ -88,7 +92,7 @@ let body;
 if(t=='r')body=`<div class="card"><div>あかい せんの かんじの よみを ひらがなで</div><div class="big">${esc(k.w).replace(k.k,'<span class=h>'+k.k+'</span>')}</div><input id="ans" autocomplete="off"><button class="g" style="width:100%;margin-top:8px" data-a="chk">こたえる</button></div>`;
 else if(t=='o'){const p=k.w.match(/^[一-鿿]+/)[0];body=`<div class="card"><div>「${k.r}」の おくりがなは？</div><div class="big">${p}<span class="h">${'＿'.repeat(k.w.length-p.length)}</span></div><input id="ans" autocomplete="off"><button class="g" style="width:100%;margin-top:8px" data-a="chk">こたえる</button></div>`}
 else body=`<div class="card"><div>「<b>${k.r}</b>」を かこう</div><div id="cvw"><div id="mdl"></div><canvas id="cv"></canvas></div><div class="grid" style="margin-top:8px"><button class="n" data-a="clr">けす</button><button class="n" data-a="mdl">おてほん</button></div><button class="g" style="width:100%;margin-top:8px" data-a="show">こたえを みる</button></div>`;
-app.innerHTML=head+body+'<div id="fb"></div>';
+app.innerHTML=head+(i.ng>=2&&t=='r'?bub(`にがてな もんだいだね！ ヒント: ぜんたいの よみは「${k.r}」だよ`):'')+body+'<div id="fb"></div>';
 if(t=='w'){initCv();const m=$('mdl');m.textContent=k.w;const w=$('cvw').clientWidth;m.style.fontSize=Math.min(180,w/k.w.length*.9)+'px';m.style.display=i.ng>=2?'flex':'none'}
 else $('ans').focus()}
 function initCv(){const c=$('cv'),r=c.getBoundingClientRect(),d=devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;const x=c.getContext('2d');x.scale(d,d);x.lineWidth=7;x.lineCap=x.lineJoin='round';x.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--fg').trim()||'#222';let dr=false;
@@ -104,36 +108,62 @@ else{const p=k.w.match(/^[一-鿿]+/)[0],a=k.w.slice(p.length),ok=v==a;fin(ok,ok
 function diff(a,b){let i=0;while(i<a.length&&i<b.length&&a[i]==b[i])i++;return a.length==b.length?`<br><small>${i+1}もじめが ちがうよ</small>`:`<br><small>もじの かずが ちがうよ (${b.length}もじ)</small>`}
 function show(){if(G.done)return;const k=G.cur[0];$('fb').innerHTML=`<div class="card"><div class="big">${k.w}</div><div class="fb">できた？ じぶんで ○×を えらぼう</div><div class="grid"><button class="g" data-a="self" data-v="1">○ かけた</button><button class="r" data-a="self" data-v="0">× ちがった</button></div></div>`}
 function fin(ok,msg){G.done=true;const[k,t]=G.cur,key=k.id+t;let i=S.items[key],first=!i;i=S.items[key]=i||{b:0,t:0,ok:0,ng:0};const was=S.wrong.includes(key),prev=i.b;let xp=0;
-if(ok){G.ok++;G.combo++;G.max=Math.max(G.max,G.combo);i.b=Math.min(4,i.b+1);i.ok++;xp=t=='w'?8:10;if(first){xp+=5;G.newl.push(k)}
-if(was&&prev==0&&i.ng>0){xp+=10;S.q.w++}if(i.b>=2)S.wrong=S.wrong.filter(s=>s!=key);xp+=Math.min(G.combo-1,4);S.q.c++;if(t=='o')S.q.o++;snd(660+G.combo*40)}
+if(ok){G.ok++;G.combo++;G.max=Math.max(G.max,G.combo);i.b=Math.min(4,i.b+1);i.ok++;xp=t=='w'?8:10;if(first){xp+=5;G.newl.push(k)}if(t=='r'&&i.b==3&&prev<3){G.mast.push(k.k);xp+=5;S.coin+=5;G.cn=(G.cn||0)+5}
+if(was&&prev==0&&i.ng>0){xp+=10;S.q.w++}if(i.b>=2)S.wrong=S.wrong.filter(s=>s!=key);xp+=Math.min(G.combo-1,4);S.q.c++;S.cc++;S.coin++;G.cn=(G.cn||0)+1;if(S.cc%10==0){S.food++;G.fd=(G.fd||0)+1}if(t=='o')S.q.o++;snd(660+G.combo*40)}
 else{G.combo=0;i.b=0;i.ng++;if(!was)S.wrong.push(key);G.wr.push(k);snd(200,.25)}
 i.t=Date.now()+IV[i.b]+(ok?0:6e4);G.xp+=xp;S.xp+=xp;while(S.xp>=need()){S.xp-=need();S.lv++;G.lvUp=true}
 QS.forEach((q,n)=>{if(S.q[q.k]>=q.n&&S.done['q'+n]!=today()){S.done['q'+n]=today();S.xp+=30;G.xp+=30}});
-G.used.add(key);save();if(ok)burst(G.combo>=3?'🔥':'⭐',G.combo>=3?9:5);else shk();
-$('fb').innerHTML=`<div class="fb ${ok?'ok':'ng'} pop">${ok?'⭕ せいかい！ +'+xp+'XP':'❌ ざんねん'}</div>${msg?`<div class="card">${msg}</div>`:''}<button style="width:100%" data-a="next">つぎへ ▶</button>`;
+G.used.add(key);save();if(ok)burst(G.combo>=3?'🔥':'⭐',G.combo>=3?9:5);else shk();if(ok&&t=='r'&&G.mast.includes(k.k))burst('🌟',14);
+$('fb').innerHTML=`<div class="fb ${ok?'ok':'ng'} pop">${ok?'⭕ せいかい！ +'+xp+'XP'+(t=='r'&&G.mast.includes(k.k)?' 🌟マスター！':''):'❌ ざんねん'}</div>${msg?`<div class="card">${msg}</div>`:''}${ok?'':bub(t=='w'?`ドンマイ！ 「${k.r}」は 「${k.w}」だよ。もういちど おぼえよう！`:`ドンマイ！ 「${k.k}」の よみは「${k.t}」(${k.w} = ${k.r})。つぎは できるよ！`)}<button style="width:100%" data-a="next">つぎへ ▶</button>`;
 const a=$('ans');if(a)a.disabled=true;if(ok)G.tm=setTimeout(()=>{if(G.done&&G.cur[0]==k)next()},900)}
 function next(){clearTimeout(G.tm);if(!G.nextLock){G.nextLock=1;setTimeout(()=>G.nextLock=0,200);ask()}}
 
 /* ===== 結果 ===== */
-function result(){let win='';if(G.m=='boss'){const w=G.ok>=8;win=`<div class="card fb ${w?'ok':'ng'}">${w?'👑 ボスに かった！':'ボスは つよかった… まけても また ちょうせんできるよ'}</div>`;if(w&&S.boss!=today()){S.boss=today();S.xp+=100;G.xp+=100;while(S.xp>=need()){S.xp-=need();S.lv++;G.lvUp=true}}}
-save();setTimeout(()=>burst(G.lvUp?'🎉':'✨',G.lvUp||G.ok>=8?16:6),200);const acc=G.N?Math.round(G.ok/G.N*100):0,rec=S.wrong.length?['e','まちがいリベンジ']:Object.keys(S.items).some(s=>s.endsWith('w'))?['o','おくりがなマスター']:['w','かきマスター'];
+function result(){let win='';if(G.m=='boss'){const w=G.ok>=8;win=`<div class="card fb ${w?'ok':'ng'}">${w?'👑 ボスに かった！':'ボスは つよかった… まけても また ちょうせんできるよ'}</div>`;if(w&&S.boss!=today()){S.boss=today();S.xp+=100;G.xp+=100;S.coin+=30;G.cn=(G.cn||0)+30;while(S.xp>=need()){S.xp-=need();S.lv++;G.lvUp=true}}}
+G.msl=chkMs();const st=Math.min(7,(S.lv-1)>>1);let evo='';if(st>S.ev){evo=`<div class="card fb ok pop">🎉 しんか！ ${PETS[S.pet].n}が ${AV[st]} に なったよ！<br><small>「なかま」の がめんを みてみよう</small></div>`;S.ev=st}if(G.fd)evo+=`<div class="card">🍙 おにぎりを ${G.fd}こ ゲット！ なかまに あげよう</div>`;if(G.cn)evo+=`<div class="card">🪙 コイン +${G.cn} (ぜんぶで ${S.coin})</div>`;if(G.msl.length)evo+=G.msl.map(m=>`<div class="card fb ok pop">${m}</div>`).join('');save();setTimeout(()=>burst(G.lvUp||evo?'🎉':'✨',G.lvUp||G.ok>=8?16:6),200);const acc=G.N?Math.round(G.ok/G.N*100):0,rec=S.wrong.length?['e','まちがいリベンジ']:Object.keys(S.items).some(s=>s.endsWith('w'))?['o','おくりがなマスター']:['w','かきマスター'];
 app.innerHTML=`<div class="card"><div class="fb">${G.ok>=8?'🏆 すごい！':G.ok>=5?'👍 いいね！':'💪 つぎは もっと できる！'}</div><div class="big">${G.ok}/${G.N}もん (${acc}%)</div>${G.lvUp?`<div class="fb ok pop">🎉 レベルアップ！ Lv${S.lv}「${title()}」</div>`:''}<div>ゲットした XP: <b>+${G.xp}</b> / つぎのレベルまで あと ${need()-S.xp}XP</div><div class="bar"><i style="width:${S.xp/need()*100}%"></i></div></div>${win}
-${G.newl.length?`<div class="card"><b>あたらしく おぼえた</b><br>${G.newl.map(k=>`${k.w}(${k.r})`).join('、')}</div>`:''}
+${evo}${G.mast.length?`<div class="card">🌟 よみマスター: <b>${G.mast.join(' ')}</b></div>`:''}${G.newl.length?`<div class="card"><b>あたらしく おぼえた</b><br>${G.newl.map(k=>`${k.w}(${k.r})`).join('、')}</div>`:''}
 ${G.wr.length?`<div class="card"><b>まちがえた もんだい</b><br>${G.wr.map(k=>`${k.w}(${k.r})`).join('、')}</div>`:''}
 <div class="grid"><button class="g" data-a="go" data-v="${G.m}">もういっかい！</button><button class="b" data-a="go" data-v="${rec[0]}">おすすめ: ${rec[1]}</button></div><button class="n" style="width:100%;margin-top:10px" data-a="home">ホームへ</button>`}
 
 /* ===== コレクション / 設定 ===== */
 function col(){const cells=K.map(k=>{const r=S.items[k.id+'r'],w=S.items[k.id+'w'],s=!r&&!w?0:(r&&r.b>=3)?((w&&w.b>=3)?3:2):1;return`<b class="s${s}" data-a="info" data-v="${k.id}">${k.k}</b>`}).join('');
-app.innerHTML=`<div class="top"><button class="n" data-a="home">◀</button><b>かんじコレクション</b></div><small>⬜みしゅうとく 🟨れんしゅうちゅう 🟩よみマスター 🟦よみ+かき マスター</small><div class="card col">${cells}</div><div id="inf"></div>`}
+app.innerHTML=`<div class="top"><button class="n" data-a="home">◀</button><b>かんじコレクション</b></div>${colHead()}<small>⬜みしゅうとく 🟨れんしゅうちゅう 🟩よみマスター 🟦よみ+かき マスター</small><div class="card col">${cells}</div><div id="inf"></div>`}
 function info(id){const k=K[id],f=t=>{const i=S.items[id+t];return i?`せいかい${i.ok}かい/ミス${i.ng}かい (レベル${i.b}/4)`:'まだ'};
 $('inf').innerHTML=`<div class="card"><div class="big">${k.k}</div>${k.g}ねんせい<br>PDFの ことば: <b>${k.w}</b> (${k.r})<br>よみ: ${f('r')}<br>かき: ${f('w')}<br>${k.o?'おくりがな: '+f('o'):''}</div>`}
+const MS=[[10,'🌱',40],[25,'🌿',60],[50,'🌳',100],[100,'🏞️',150],[150,'⛰️',200],[200,'🌋',300],[240,'👑',500]];
+const mastered=g=>K.filter(k=>(!g||k.g==g)&&S.items[k.id+'r']&&S.items[k.id+'r'].b>=3).length;
+function chkMs(){const n=mastered(),out=[];for(const[m,e,x]of MS)if(n>=m&&!S.cm.includes('m'+m)){S.cm.push('m'+m);S.xp+=x;G.xp+=x;out.push(`${e} コレクション ${m}じ たっせい！ +${x}XP`)}
+[1,2].forEach(g=>{const t=K.filter(k=>k.g==g).length;if(mastered(g)>=t&&!S.cm.includes('g'+g)){S.cm.push('g'+g);S.xp+=200;G.xp+=200;out.push(`🏆 ${g}ねんせいの かんじを ぜんぶ マスター！ +200XP`)}});
+while(S.xp>=need()){S.xp-=need();S.lv++;G.lvUp=true}return out}
+function colHead(){const n=mastered(),nx=MS.find(m=>m[0]>n);return `<div class="card"><b>🌟 よみマスター ${n}/${K.length}</b><div class="bar"><i style="width:${n/K.length*100}%"></i></div><small>${nx?`つぎの ごほうびまで あと ${nx[0]-n}じ ${nx[1]}`:'ぜんぶ たっせい！👑'}</small><div style="margin-top:6px;font-size:26px">${MS.map(m=>S.cm.includes('m'+m[0])?m[1]:'🔒').join(' ')}</div></div>`}
+const ST=['たまご','ちびっこ','こども','わかもの','おとな','りっぱ','でんせつ','おうさま'],YUM=['もぐもぐ！ おいしい！','ありがとう！ だいすき！','げんきが でたよ！'],TALK=['きょうも いっしょに がんばろう！','かんじ、たのしいね！','まちがえても だいじょうぶ！'];
+const ACC=[{e:'🎩',lv:2},{e:'🕶️',lv:3},{e:'🎀',lv:5},{e:'🪽',lv:7},{e:'👑',lv:9},{e:'🌈',m:50},{e:'🏅',m:100}];
+const okAcc=a=>a.lv?S.lv>=a.lv:mastered()>=a.m;
+function pet(msg){const st=Math.min(7,(S.lv-1)>>1),nl=st<7?(st+1)*2+1:0,h=S.bond%5,bl=Math.floor(S.bond/5);
+app.innerHTML=`<div class="top"><button class="n" data-a="home">◀</button><b>🐾 なかま</b><span>🍙${S.food} 🪙${S.coin}</span></div>
+<div class="card" style="text-align:center"><div class="av" data-a="tap" style="font-size:110px;position:relative;display:inline-block">${AV[st]}<span class="ac" style="font-size:56px;top:-20px;right:-24px">${S.acc||''}</span></div>
+<div class="fb">${PETS[S.pet].n} Lv${S.lv} <small>(${ST[st]})</small></div><div id="pm">${esc(msg||'タップしてね！')}</div>
+<div style="margin:8px 0">なかよし ${'❤️'.repeat(h)}${'🤍'.repeat(5-h)} <small>(なかよしレベル ${bl})</small></div>
+<button class="g" data-a="feed">🍙 おにぎりを あげる</button><br><small>もんだいを 10もん せいかいするごとに おにぎり 1こ</small>
+<div style="margin-top:8px"><small>${nl?`Lv${nl}で しんか！ (あと ${nl-S.lv}レベル)`:'さいごの すがたに なったよ！'}</small></div></div>
+${shop()}<div class="card"><b>きせかえ</b><div class="grid" style="margin-top:8px">${ACC.map(a=>{const u=okAcc(a);return `<button class="${S.acc==a.e?'g':'n'}" ${u?`data-a="wear" data-v="${a.e}"`:'disabled style="opacity:.5"'}>${u?a.e:'🔒'} <small>${a.lv?'Lv'+a.lv:'マスター'+a.m+'じ'}</small></button>`}).join('')}</div></div>`}
+function feed(){if(S.food<1)return toast('おにぎりが ないよ。もんだいを 10もん せいかいすると 1こ ゲット！');S.food--;S.bond++;save();burst('❤️',8);snd(880);pet(YUM[Math.floor(Math.random()*YUM.length)])}
+function wear(v){S.acc=S.acc==v?'':v;save();pet()}
+function tap(){burst('✨',4);snd(520,.08);$('pm').textContent=TALK[Math.floor(Math.random()*TALK.length)]}
+const PETS=[{n:'ひよこ',c:0,s:['🥚','🐣','🐥','🐔']},{n:'ねこ',c:30,s:['🥚','🐱','😺','🦁']},{n:'いぬ',c:30,s:['🥚','🐶','🐕','🐺']},{n:'ペンギン',c:60,s:['🥚','🐧','🐦','🦅']},{n:'パンダ',c:80,s:['🥚','🐼','🐻','🐻‍❄️']},{n:'ロボ',c:120,s:['🔩','🤖','🦾','🛸']},{n:'りゅう',c:150,s:['🥚','🦎','🐊','🐲']},{n:'ユニコーン',c:200,s:['🥚','🐴','🐎','🦄']}];
+const bub=t=>`<div class="bub"><span class="bf">${cur()}</span><div>${t}</div></div>`;
+function homeBub(){const ks=S.wrong.length?S.wrong:Object.keys(S.items).filter(s=>S.items[s].ng>0);if(!ks.length)return '';const key=ks[Math.floor(Math.random()*Math.min(3,ks.length))],k=K[parseInt(key)],t=key.slice(-1);const tx=t=='w'?`「${k.r}」は 「${k.w}」と かくよ`:`「${k.k}」の よみは「${k.t}」だよ (${k.w} = ${k.r})`;return `<div class="bub"><span class="bf">${cur()}</span><div>にがてな かんじ みつけた！<br><b>${tx}</b><br><button class="n" data-a="go" data-v="e" style="margin-top:6px;padding:8px 12px">れんしゅうする</button></div></div>`}
+function shop(){const st=Math.min(7,(S.lv-1)>>1);return `<div class="card"><b>ペットショップ</b> <small>🪙 ${S.coin}</small><div class="grid" style="margin-top:8px">${PETS.map((p,i)=>{const own=S.own.includes(i),f=p.s[Math.min(p.s.length-1,Math.floor(st/2))];return own?`<button class="${S.pet==i?'g':'n'}" data-a="sel" data-v="${i}"><span style="font-size:34px">${f}</span><br>${p.n}<br><small>${S.pet==i?'いっしょに いるよ':'つれていく'}</small></button>`:`<button class="n" data-a="buy" data-v="${i}" ${S.coin<p.c?'style="opacity:.55"':''}><span style="font-size:34px">${p.s[1]}</span><br>${p.n}<br><small>🪙 ${p.c}</small></button>`}).join('')}</div><small>コインは せいかいすると もらえるよ</small></div>`}
+function sel(v){S.pet=+v;save();pet()}
+function buy(v){v=+v;const p=PETS[v];if(S.coin<p.c)return toast(`コインが たりないよ (あと ${p.c-S.coin})`);if(!confirm(`${p.n}を ${p.c}コインで かう？`))return;S.coin-=p.c;S.own.push(v);S.pet=v;save();burst('🎉',12);snd(880);pet(`${p.n}が なかまに なったよ！`)}
 function sett(){app.innerHTML=`<div class="top"><button class="n" data-a="home">◀</button><b>せってい</b></div>
 <div class="card">なまえ<input id="nm" value="${esc(S.name)}" maxlength="10"><br><br>れんしゅうする がくねん<div class="grid"><button class="${S.set.g=='1'?'g':'n'}" data-a="gr" data-v="1">1ねんせい</button><button class="${S.set.g=='2'?'g':'n'}" data-a="gr" data-v="2">2ねんせい</button></div><button class="${S.set.g=='12'?'g':'n'}" style="width:100%;margin-top:8px" data-a="gr" data-v="12">1・2ねん ぜんぶ</button><br><br><button class="${S.set.snd?'g':'n'}" data-a="sd">こうかおん: ${S.set.snd?'ON':'OFF'}</button> <button data-a="nm">なまえを ほぞん</button></div>
 <div class="card"><b>きろくの バックアップ</b><br><small>おなじ たんまつ・ブラウザでの ほぞんです。じどうでは ほかの たんまつに うつりません。</small><textarea id="ex" rows="4">${esc(JSON.stringify(S))}</textarea><div class="grid" style="margin-top:8px"><button class="b" data-a="dl">ダウンロード</button><button class="g" data-a="imp">この ないようで ふっかつ</button></div></div>
 <div class="card"><small>とうろく: 1ねん ${K.filter(k=>k.g==1).length}じ / 2ねん ${K.filter(k=>k.g==2).length}じ。1じに つき PDFの ことば 1つ。</small></div><button class="r" data-a="rst" style="width:100%">ぜんぶ けす</button>`}
 
 /* ===== イベント ===== */
-const act={go:start,home:()=>{G=null;home()},chk,show,next,col,set:sett,info,
+const act={go:start,home:()=>{G=null;home()},chk,show,next,col,set:sett,info,pet,feed,wear,tap,sel,buy,
 nm(){const v=$('nm').value.trim();if(v){S.name=v;save()}home()},
 self(v){fin(v=='1','')},clr(){G.clr&&G.clr()},mdl(){const m=$('mdl');m.style.display=m.style.display=='flex'?'none':'flex'},
 gr(v){S.set.g=v;save();sett()},sd(){S.set.snd=!S.set.snd;save();sett()},
