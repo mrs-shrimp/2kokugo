@@ -1,0 +1,146 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>かんじ ぼうけん</title>
+<style>
+:root{--bg:#fff6e0;--card:#fff;--fg:#2b2b3a;--c:#ff7a45;--g:#2fae6b;--r:#e5484d;--b:#4f7cff;--l:#e8e2d0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1d2033;--card:#2a2e48;--fg:#f3f1ea;--l:#444a6b}}
+:root[data-theme=dark]{--bg:#1d2033;--card:#2a2e48;--fg:#f3f1ea;--l:#444a6b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;font-size:18px}
+#app{max-width:720px;margin:0 auto;padding:12px}
+button{font:inherit;border:0;border-radius:16px;padding:14px;background:var(--c);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+button:active{transform:translateY(3px);box-shadow:none}button.g{background:var(--g)}button.b{background:var(--b)}button.r{background:var(--r)}button.n{background:var(--l);color:var(--fg)}
+.card{background:var(--card);border-radius:18px;padding:14px;margin:10px 0}
+.top{display:flex;justify-content:space-between;align-items:center}
+.bar{height:14px;background:var(--l);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--g);transition:width .4s}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big{font-size:42px;text-align:center;margin:10px 0;line-height:1.3}.h{color:var(--r);border-bottom:4px solid var(--r)}
+input,textarea{font:inherit;width:100%;padding:12px;border-radius:12px;border:3px solid var(--l);background:var(--card);color:var(--fg)}
+#cvw{position:relative;height:220px;background:var(--card);border:3px solid var(--l);border-radius:14px;overflow:hidden}
+#cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+#mdl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.14;pointer-events:none;white-space:nowrap}
+.fb{font-weight:700;font-size:22px;text-align:center;padding:8px}.ok{color:var(--g)}.ng{color:var(--r)}
+.col{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+.col b{display:flex;aspect-ratio:1;align-items:center;justify-content:center;font-size:24px;border-radius:10px;background:var(--l);opacity:.55;cursor:pointer}
+.col b.s1{background:#ffd86b;opacity:1;color:#333}.col b.s2{background:var(--g);opacity:1;color:#fff}.col b.s3{background:var(--b);opacity:1;color:#fff}
+.pop{animation:p .35s}@keyframes p{50%{transform:scale(1.15)}}
+small{opacity:.75}
+body{background:radial-gradient(circle at 15% 0,#ffe0a0,transparent 45%),radial-gradient(circle at 95% 8%,#bcd8ff,transparent 40%),var(--bg);min-height:100vh}
+button{background:linear-gradient(#ff9a62,#ff6a2c);border-radius:20px;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+button.g{background:linear-gradient(#58d68d,#27ae60)}button.b{background:linear-gradient(#7ea2ff,#4a6fe6)}button.r{background:linear-gradient(#ff7b7f,#e23b44)}button.n{background:var(--l);text-shadow:none}
+.hero{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#7b61ff,#ff7ac3);color:#fff;border-radius:24px;padding:12px 14px;box-shadow:0 6px 0 rgba(0,0,0,.18);margin-bottom:8px}
+.av{font-size:56px;animation:fl 2.4s ease-in-out infinite}@keyframes fl{50%{transform:translateY(-8px) rotate(6deg)}}
+.mb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 6px;font-size:17px}.mb span{font-size:40px;animation:fl 3s ease-in-out infinite}
+.pt{position:fixed;pointer-events:none;font-size:30px;animation:up 1s ease-out forwards;z-index:9}@keyframes up{to{transform:translate(var(--x),-170px) rotate(360deg);opacity:0}}
+.shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.fb.ok{font-size:30px}.card{box-shadow:0 4px 0 rgba(0,0,0,.08)}
+</style></head><body><div id="app"></div>
+<script>
+/* ===== データ: 添付PDFの掲載語から1漢字につき1語を抽出(漢字 語 よみ)。先頭*は送り仮名つき。語句はPDF記載のもののみ ===== */
+const RAW={1:`花 花びら はなびら/木 木かげ こかげ/九 *九つ ここのつ/一 *一つ ひとつ/草 草もち くさもち/金 お金 おかね/十 十日 とおか/二 *二つ ふたつ/石 小石 こいし/土 土足 どそく/百 百円 ひゃくえん/三 *三つ みっつ/貝 貝がら かいがら/山 山みち やまみち/千 千円 せんえん/四 *四つ よっつ/虫 すず虫 すずむし/川 川かみ かわかみ/日 三日 みっか/五 *五つ いつつ/犬 白い犬 しろいいぬ/林 竹林 ちくりん/月 月見 つきみ/六 *六つ むっつ/田 水田 すいでん/森 森の中 もりのなか/火 火山 かざん/七 *七つ ななつ/年 年上 としうえ/竹 竹やぶ たけやぶ/水 水玉 みずたま/八 *八つ やっつ/立 *立つ たつ/力 学力 がくりょく/大 *大きい おおきい/空 空気 くうき/休 *休む やすむ/口 口ぶえ くちぶえ/中 中学校 ちゅうがっこう/天 天気 てんき/出 *出す だす/目 目つき めつき/小 *小さい ちいさい/気 気もち きもち/入 *入る はいる/手 右手 みぎて/上 木の上 きのうえ/雨 雨ふり あめふり/女 女子 じょし/足 足あと あしあと/下 下校 げこう/夕 夕日 ゆうひ/男 男の子 おとこのこ/耳 耳たぶ みみたぶ/左 左足 ひだりあし/白 白い花 しろいはな/子 子ども こども/音 音ぷ おんぷ/右 右がわ みぎがわ/青 青空 あおぞら/人 人ごみ ひとごみ/見 *見る みる/円 *円い まるい/赤 赤い車 あかいくるま/早 *早い はやい/名 名まえ なまえ/正 *正しい ただしい/字 かん字 かんじ/王 王さま おうさま/文 さく文 さくぶん/玉 玉虫 たまむし/本 本だな ほんだな/糸 白い糸 しろいいと/学 小学生 しょうがくせい/車 でん車 でんしゃ/校 校てい こうてい/村 村の人 むらのひと/先 先生 せんせい/町 町なみ まちなみ/生 *生きる いきる`,
+2:`東 東京 とうきょう/教 教室 きょうしつ/図 地図 ちず/国 外国 がいこく/西 西風 にしかぜ/室 室内 しつない/画 画めん がめん/語 国語 こくご/南 南国 なんごく/組 赤組 あかぐみ/工 工作 こうさく/算 算数 さんすう/北 北上 ほくじょう/点 点数 てんすう/作 *作る つくる/数 数字 すうじ/春 春先 はるさき/当 本当 ほんとう/体 体そう たいそう/理 理科 りか/夏 夏休み なつやすみ/番 当番 とうばん/楽 音楽 おんがく/科 教科 きょうか/秋 秋空 あきぞら/門 校門 こうもん/活 生活 せいかつ/社 社会 しゃかい/冬 冬山 ふゆやま/戸 雨戸 あまど/食 夕食 ゆうしょく/会 *出会う であう/魚 金魚 きんぎょ/風 強風 きょうふう/地 大地 だいち/時 時間 じかん/鳥 白鳥 はくちょう/星 火星 かせい/野 野原 のはら/間 人間 にんげん/牛 牛肉 ぎゅうにく/光 日光 にっこう/原 高原 こうげん/分 水分 すいぶん/馬 木馬 もくば/明 *明るい あかるい/谷 谷川 たにがわ/朝 朝日 あさひ/羽 羽毛 うもう/午 午前 ごぜん/岩 岩山 いわやま/昼 昼食 ちゅうしょく/毛 毛糸 けいと/晴 晴天 せいてん/池 電池 でんち/夜 夜空 よぞら/肉 きん肉 きんにく/雲 雨雲 あまぐも/海 海外 かいがい/曜 日曜日 にちようび/鳴 鳴き声 なきごえ/雪 雪国 ゆきぐに/船 船長 せんちょう/週 毎週 まいしゅう/新 新年 しんねん/高 *高い たかい/父 父親 ちちおや/頭 先頭 せんとう/古 *古い ふるい/長 校長 こうちょう/母 母親 ははおや/顔 顔つき かおつき/内 校内 こうない/前 名前 なまえ/親 親切 しんせつ/首 足首 あしくび/外 外がわ そとがわ/後 *後ろ うしろ/兄 兄さん にいさん/自 自分 じぶん/遠 *遠い とおい/多 *多い おおい/弟 弟 おとうと/才 天才 てんさい/近 近道 ちかみち/少 *少ない すくない/姉 姉さん ねえさん/今 今夜 こんや/太 *太い ふとい/強 *強い つよい/妹 妹 いもうと/毎 毎日 まいにち/細 *細かい こまかい/弱 弱虫 よわむし/友 友だち ともだち/回 回数 かいすう/話 会話 かいわ/歩 *歩く あるく/絵 絵本 えほん/来 来月 らいげつ/読 *読む よむ/走 *走る はしる/線 電線 でんせん/帰 帰国 きこく/書 *書く かく/直 直線 ちょくせん/形 三角形 さんかっけい/切 大切 たいせつ/記 記入 きにゅう/行 行き先 いきさき/丸 *丸い まるい/引 引力 いんりょく/聞 新聞 しんぶん/止 中止 ちゅうし/方 夕方 ゆうがた/万 一万円 いちまんえん/言 *言う いう/道 山道 やまみち/角 直角 ちょっかく/元 元気 げんき/歌 歌手 かしゅ/交 交番 こうばん/用 用紙 ようし/同 *同じ おなじ/声 大声 おおごえ/通 通学 つうがく/紙 手紙 てがみ/半 半分 はんぶん/公 公園 こうえん/心 心ぞう しんぞう/園 花園 はなぞの/知 知人 ちじん/広 *広い ひろい/思 *思う おもう/場 広場 ひろば/考 *考える かんがえる/寺 山寺 やまでら/計 計算 けいさん/市 市長 しちょう/答 *答える こたえる/京 東京 とうきょう/合 合図 あいず/里 里帰り さとがえり/何 何人 なんにん/刀 木刀 ぼくとう/黒 *黒い くろい/弓 弓矢 ゆみや/茶 茶色 ちゃいろ/矢 矢先 やさき/黄 黄色 きいろ/米 白米 はくまい/色 顔色 かおいろ/麦 麦茶 むぎちゃ/台 台風 たいふう/売 売店 ばいてん/家 家ぞく かぞく/買 買いもの かいもの/電 電話 でんわ/店 店先 みせさき/汽 汽車 きしゃ`};
+/* 下線の漢字だけの読み(RAWと同じ並び) */
+const TR=`はな/こ/ここの/ひと/くさ/かね/とお/ふた/いし/ど/ひゃく/みっ/かい/やま/せん/よっ/むし/かわ/か/いつ/いぬ/りん/つき/むっ/でん/もり/か/なな/とし/たけ/みず/やっ/た/りょく/おお/くう/やす/くち/ちゅう/てん/だ/め/ちい/き/はい/て/うえ/あめ/じょ/あし/げ/ゆう/おとこ/みみ/ひだり/しろ/こ/おん/みぎ/あお/ひと/み/まる/あか/はや/な/ただ/じ/おう/ぶん/たま/ほん/いと/がく/しゃ/こう/むら/せん/まち/い/とう/きょう/ず/こく/にし/しつ/が/ご/なん/ぐみ/こう/さん/ほく/てん/つく/すう/はる/とう/たい/り/なつ/ばん/がく/か/あき/もん/かつ/しゃ/ふゆ/ど/しょく/あ/ぎょ/ふう/ち/じ/ちょう/せい/の/げん/ぎゅう/こう/げん/ぶん/ば/あか/たに/あさ/う/ご/いわ/ちゅう/け/せい/ち/よ/にく/ぐも/かい/よう/な/ゆき/せん/しゅう/しん/たか/ちち/とう/ふる/ちょう/はは/かお/ない/まえ/しん/くび/そと/うし/にい/じ/とお/おお/おとうと/さい/ちか/すく/ねえ/こん/ふと/つよ/いもうと/まい/こま/よわ/とも/かい/わ/ある/え/らい/よ/はし/せん/き/か/ちょく/けい/せつ/き/い/まる/いん/ぶん/し/かた/まん/い/みち/かく/げん/か/こう/よう/おな/ごえ/つう/がみ/はん/こう/しん/ぞの/ち/ひろ/おも/ば/かんが/でら/けい/し/こた/きょう/あい/さと/なん/とう/くろ/ゆみ/ちゃ/や/き/まい/いろ/むぎ/たい/ばい/か/か/でん/みせ/き`.split('/');
+const K=[];for(const g in RAW)RAW[g].split('/').forEach(e=>{let[k,w,r]=e.split(' ');const o=w[0]=='*';if(o)w=w.slice(1);K.push({id:K.length,g:+g,k,w,r,o,t:TR[K.length]})});
+if(TR.length!=K.length)console.warn('TR数が合いません',TR.length,K.length);
+
+/* ===== 保存 ===== */
+const $=id=>document.getElementById(id),app=$('app'),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S,mem=true,G;
+const def=()=>({name:'',lv:1,xp:0,items:{},wrong:[],q:{d:'',c:0,w:0,o:0},done:{},boss:'',set:{snd:true,g:'12'}});
+function load(){try{S=Object.assign(def(),JSON.parse(localStorage.getItem('kj1')))}catch(e){S=def();mem=false}}
+function save(){try{localStorage.setItem('kj1',JSON.stringify(S))}catch(e){mem=false}}
+const today=()=>new Date().toISOString().slice(0,10),need=()=>S.lv*60;
+const TT=['みならい','かんじ ひろいびと','かんじ たんけんか','もじ ぼうけんか','かんじ きし','かんじ はかせ','かんじ たつじん','かんじ でんせつ'];
+const title=()=>TT[Math.min(TT.length-1,(S.lv-1)>>1)];
+let ac;function snd(f,d=.12){if(!S.set.snd)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.07;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
+const AV=['🥚','🐣','🐥','🦊','🐲','🦄','🌟','👑'];
+function burst(e,n){for(let i=0;i<n;i++){const s=document.createElement('span');s.className='pt';s.textContent=e;s.style.left=(15+Math.random()*70)+'vw';s.style.top=(35+Math.random()*25)+'vh';s.style.setProperty('--x',(Math.random()*180-90)+'px');document.body.appendChild(s);setTimeout(()=>s.remove(),1000)}}
+function shk(){app.classList.remove('shake');void app.offsetWidth;app.classList.add('shake')}
+const hira=s=>s.replace(/[ァ-ン]/g,c=>String.fromCharCode(c.charCodeAt(0)-96)).replace(/\s/g,'');
+const IV=[0,6e5,864e5,3*864e5,7*864e5];
+const QS=[{t:'10もん せいかい',k:'c',n:10},{t:'にがてを 3つ クリア',k:'w',n:3},{t:'おくりがなを 3もん せいかい',k:'o',n:3}];
+function qday(){if(S.q.d!=today())S.q={d:today(),c:0,w:0,o:0}}
+
+/* ===== ホーム ===== */
+function home(){qday();const pool=Object.keys(S.items).length;
+app.innerHTML=`${mem?'':'<div class="card ng">⚠ ほぞんできません。きろくは このページを とじると きえます</div>'}
+<div class="hero"><div class="av">${AV[Math.min(AV.length-1,(S.lv-1)>>1)]}</div><div><div style="font-size:22px"><b>${esc(S.name||'なまえ')}</b></div><div>Lv${S.lv} 「${title()}」</div></div><button class="n" data-a="set" style="margin-left:auto">⚙</button></div>
+<div class="bar"><i style="width:${S.xp/need()*100}%"></i></div><small>つぎのレベルまで あと ${need()-S.xp}XP</small>
+${S.name?'':'<div class="card">なまえを いれてね<input id="nm" maxlength="10"><button class="g" data-a="nm" style="margin-top:8px">けってい</button></div>'}
+<div class="grid" style="margin-top:12px"><button class="mb" data-a="go" data-v="r"><span>👀</span>よみマスター</button><button class="mb g" data-a="go" data-v="w"><span>✏️</span>かきマスター</button><button class="mb b" data-a="go" data-v="o"><span>🔤</span>おくりがな</button><button class="mb" data-a="go" data-v="x" style="background:linear-gradient(#c58bff,#8a4fe8)"><span>🎲</span>まぜまぜ</button><button class="mb r" data-a="go" data-v="e"><span>🔥</span>まちがいリベンジ(${S.wrong.length})</button><button class="mb" data-a="go" data-v="boss" style="background:linear-gradient(#3b3b5c,#14142b)"><span>👹</span>ボス ${S.lv<3?'🔒Lv3':''}</button></div>
+<div class="card"><b>きょうのクエスト</b>${QS.map((q,i)=>`<div>${S.done['q'+i]==today()?'✅':'⬜'} ${q.t} <small>${Math.min(S.q[q.k],q.n)}/${q.n}</small></div>`).join('')}</div>
+<button class="g" style="width:100%" data-a="col">📖 かんじコレクション (${Object.keys(S.items).filter(k=>k.endsWith('r')).length}/${K.length})</button>`}
+
+/* ===== 出題 ===== */
+function pick(){const now=Date.now(),cs=[];
+for(const[k,t]of G.list){const key=k.id+t;if(G.used.has(key))continue;const i=S.items[key];let p;
+if(!i)p=1+Math.random();else if(i.t<=now)p=3+i.ng*2-i.b+Math.random()+(S.wrong.includes(key)?3:0);else continue;cs.push([p,k,t])}
+if(!cs.length)for(const[k,t]of G.list)if(!G.used.has(k.id+t))cs.push([Math.random(),k,t]);
+if(!cs.length)return null;cs.sort((a,b)=>b[0]-a[0]);const c=cs[Math.floor(Math.random()*Math.min(5,cs.length))];return[c[1],c[2]]}
+function start(m){const gs=S.set.g,pool=K.filter(k=>gs.includes(k.g)),ty={r:['r'],w:['w'],o:['o'],x:['r','w','o']}[m];let list=[];
+if(m=='e')list=S.wrong.map(s=>[K[parseInt(s)],s.slice(-1)]);
+else if(m=='boss'){list=Object.keys(S.items).filter(s=>S.items[s].ok>0).map(s=>[K[parseInt(s)],s.slice(-1)]);if(S.lv<3||list.length<15)return toast('ボスは Lv3いじょう、15もん せいかいしてから！')}
+else for(const k of pool)for(const t of ty)if(t!='o'||k.o)list.push([k,t]);
+if(!list.length)return toast('まちがいは ありません！すごい！');
+G={m,N:Math.min(10,list.length),n:0,ok:0,combo:0,max:0,xp:0,newl:[],wr:[],used:new Set(),list,lvUp:false};ask()}
+function toast(s){alert(s)}
+function ask(){if(G.n>=G.N)return result();const q=pick();if(!q)return result();G.cur=q;G.n++;G.done=false;const[k,t]=q,key=k.id+t,i=S.items[key]||{ng:0};
+const head=`<div class="top"><button class="n" data-a="home">✕</button><div>${G.m=='boss'?'👹 ':''}${G.n}/${G.N} ${G.combo>1?`<b class="pop">🔥${G.combo}コンボ</b>`:''}</div></div><div class="bar"><i style="width:${(G.n-1)/G.N*100}%"></i></div>`;
+let body;
+if(t=='r')body=`<div class="card"><div>あかい せんの かんじの よみを ひらがなで</div><div class="big">${esc(k.w).replace(k.k,'<span class=h>'+k.k+'</span>')}</div><input id="ans" autocomplete="off"><button class="g" style="width:100%;margin-top:8px" data-a="chk">こたえる</button></div>`;
+else if(t=='o'){const p=k.w.match(/^[一-鿿]+/)[0];body=`<div class="card"><div>「${k.r}」の おくりがなは？</div><div class="big">${p}<span class="h">${'＿'.repeat(k.w.length-p.length)}</span></div><input id="ans" autocomplete="off"><button class="g" style="width:100%;margin-top:8px" data-a="chk">こたえる</button></div>`}
+else body=`<div class="card"><div>「<b>${k.r}</b>」を かこう</div><div id="cvw"><div id="mdl"></div><canvas id="cv"></canvas></div><div class="grid" style="margin-top:8px"><button class="n" data-a="clr">けす</button><button class="n" data-a="mdl">おてほん</button></div><button class="g" style="width:100%;margin-top:8px" data-a="show">こたえを みる</button></div>`;
+app.innerHTML=head+body+'<div id="fb"></div>';
+if(t=='w'){initCv();const m=$('mdl');m.textContent=k.w;const w=$('cvw').clientWidth;m.style.fontSize=Math.min(180,w/k.w.length*.9)+'px';m.style.display=i.ng>=2?'flex':'none'}
+else $('ans').focus()}
+function initCv(){const c=$('cv'),r=c.getBoundingClientRect(),d=devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;const x=c.getContext('2d');x.scale(d,d);x.lineWidth=7;x.lineCap=x.lineJoin='round';x.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--fg').trim()||'#222';let dr=false;
+const pt=e=>{const b=c.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top]};
+c.onpointerdown=e=>{e.preventDefault();dr=true;c.setPointerCapture(e.pointerId);const p=pt(e);x.beginPath();x.moveTo(p[0],p[1]);x.lineTo(p[0]+.1,p[1]);x.stroke()};
+c.onpointermove=e=>{if(!dr)return;const p=pt(e);x.lineTo(p[0],p[1]);x.stroke();x.beginPath();x.moveTo(p[0],p[1])};
+c.onpointerup=c.onpointercancel=()=>dr=false;c.ontouchmove=e=>e.preventDefault();G.clr=()=>x.clearRect(0,0,c.width,c.height)}
+
+/* ===== 判定 ===== */
+function chk(){if(G.done)return;const[k,t]=G.cur,v=hira($('ans').value);if(!v)return;
+if(t=='r'){const ok=v==k.t||(k.o&&v==k.r),inf=`<br><small>${k.k} = ${k.t}　(${esc(k.w)} = ${k.r})</small>`;fin(ok,ok?inf:`あなた: ${esc(v)}<br>せいかい: <b>${k.t}</b>${diff(v,k.t)}${inf}`)}
+else{const p=k.w.match(/^[一-鿿]+/)[0],a=k.w.slice(p.length),ok=v==a;fin(ok,ok?'':`あなた: ${esc(v)}<br>せいかい: <b>${p}${a}</b>${diff(v,a)}`)}}
+function diff(a,b){let i=0;while(i<a.length&&i<b.length&&a[i]==b[i])i++;return a.length==b.length?`<br><small>${i+1}もじめが ちがうよ</small>`:`<br><small>もじの かずが ちがうよ (${b.length}もじ)</small>`}
+function show(){if(G.done)return;const k=G.cur[0];$('fb').innerHTML=`<div class="card"><div class="big">${k.w}</div><div class="fb">できた？ じぶんで ○×を えらぼう</div><div class="grid"><button class="g" data-a="self" data-v="1">○ かけた</button><button class="r" data-a="self" data-v="0">× ちがった</button></div></div>`}
+function fin(ok,msg){G.done=true;const[k,t]=G.cur,key=k.id+t;let i=S.items[key],first=!i;i=S.items[key]=i||{b:0,t:0,ok:0,ng:0};const was=S.wrong.includes(key),prev=i.b;let xp=0;
+if(ok){G.ok++;G.combo++;G.max=Math.max(G.max,G.combo);i.b=Math.min(4,i.b+1);i.ok++;xp=t=='w'?8:10;if(first){xp+=5;G.newl.push(k)}
+if(was&&prev==0&&i.ng>0){xp+=10;S.q.w++}if(i.b>=2)S.wrong=S.wrong.filter(s=>s!=key);xp+=Math.min(G.combo-1,4);S.q.c++;if(t=='o')S.q.o++;snd(660+G.combo*40)}
+else{G.combo=0;i.b=0;i.ng++;if(!was)S.wrong.push(key);G.wr.push(k);snd(200,.25)}
+i.t=Date.now()+IV[i.b]+(ok?0:6e4);G.xp+=xp;S.xp+=xp;while(S.xp>=need()){S.xp-=need();S.lv++;G.lvUp=true}
+QS.forEach((q,n)=>{if(S.q[q.k]>=q.n&&S.done['q'+n]!=today()){S.done['q'+n]=today();S.xp+=30;G.xp+=30}});
+G.used.add(key);save();if(ok)burst(G.combo>=3?'🔥':'⭐',G.combo>=3?9:5);else shk();
+$('fb').innerHTML=`<div class="fb ${ok?'ok':'ng'} pop">${ok?'⭕ せいかい！ +'+xp+'XP':'❌ ざんねん'}</div>${msg?`<div class="card">${msg}</div>`:''}<button style="width:100%" data-a="next">つぎへ ▶</button>`;
+const a=$('ans');if(a)a.disabled=true;if(ok)G.tm=setTimeout(()=>{if(G.done&&G.cur[0]==k)next()},900)}
+function next(){clearTimeout(G.tm);if(!G.nextLock){G.nextLock=1;setTimeout(()=>G.nextLock=0,200);ask()}}
+
+/* ===== 結果 ===== */
+function result(){let win='';if(G.m=='boss'){const w=G.ok>=8;win=`<div class="card fb ${w?'ok':'ng'}">${w?'👑 ボスに かった！':'ボスは つよかった… まけても また ちょうせんできるよ'}</div>`;if(w&&S.boss!=today()){S.boss=today();S.xp+=100;G.xp+=100;while(S.xp>=need()){S.xp-=need();S.lv++;G.lvUp=true}}}
+save();setTimeout(()=>burst(G.lvUp?'🎉':'✨',G.lvUp||G.ok>=8?16:6),200);const acc=G.N?Math.round(G.ok/G.N*100):0,rec=S.wrong.length?['e','まちがいリベンジ']:Object.keys(S.items).some(s=>s.endsWith('w'))?['o','おくりがなマスター']:['w','かきマスター'];
+app.innerHTML=`<div class="card"><div class="fb">${G.ok>=8?'🏆 すごい！':G.ok>=5?'👍 いいね！':'💪 つぎは もっと できる！'}</div><div class="big">${G.ok}/${G.N}もん (${acc}%)</div>${G.lvUp?`<div class="fb ok pop">🎉 レベルアップ！ Lv${S.lv}「${title()}」</div>`:''}<div>ゲットした XP: <b>+${G.xp}</b> / つぎのレベルまで あと ${need()-S.xp}XP</div><div class="bar"><i style="width:${S.xp/need()*100}%"></i></div></div>${win}
+${G.newl.length?`<div class="card"><b>あたらしく おぼえた</b><br>${G.newl.map(k=>`${k.w}(${k.r})`).join('、')}</div>`:''}
+${G.wr.length?`<div class="card"><b>まちがえた もんだい</b><br>${G.wr.map(k=>`${k.w}(${k.r})`).join('、')}</div>`:''}
+<div class="grid"><button class="g" data-a="go" data-v="${G.m}">もういっかい！</button><button class="b" data-a="go" data-v="${rec[0]}">おすすめ: ${rec[1]}</button></div><button class="n" style="width:100%;margin-top:10px" data-a="home">ホームへ</button>`}
+
+/* ===== コレクション / 設定 ===== */
+function col(){const cells=K.map(k=>{const r=S.items[k.id+'r'],w=S.items[k.id+'w'],s=!r&&!w?0:(r&&r.b>=3)?((w&&w.b>=3)?3:2):1;return`<b class="s${s}" data-a="info" data-v="${k.id}">${k.k}</b>`}).join('');
+app.innerHTML=`<div class="top"><button class="n" data-a="home">◀</button><b>かんじコレクション</b></div><small>⬜みしゅうとく 🟨れんしゅうちゅう 🟩よみマスター 🟦よみ+かき マスター</small><div class="card col">${cells}</div><div id="inf"></div>`}
+function info(id){const k=K[id],f=t=>{const i=S.items[id+t];return i?`せいかい${i.ok}かい/ミス${i.ng}かい (レベル${i.b}/4)`:'まだ'};
+$('inf').innerHTML=`<div class="card"><div class="big">${k.k}</div>${k.g}ねんせい<br>PDFの ことば: <b>${k.w}</b> (${k.r})<br>よみ: ${f('r')}<br>かき: ${f('w')}<br>${k.o?'おくりがな: '+f('o'):''}</div>`}
+function sett(){app.innerHTML=`<div class="top"><button class="n" data-a="home">◀</button><b>せってい</b></div>
+<div class="card">なまえ<input id="nm" value="${esc(S.name)}" maxlength="10"><br><br>れんしゅうする がくねん<div class="grid"><button class="${S.set.g=='1'?'g':'n'}" data-a="gr" data-v="1">1ねんせい</button><button class="${S.set.g=='2'?'g':'n'}" data-a="gr" data-v="2">2ねんせい</button></div><button class="${S.set.g=='12'?'g':'n'}" style="width:100%;margin-top:8px" data-a="gr" data-v="12">1・2ねん ぜんぶ</button><br><br><button class="${S.set.snd?'g':'n'}" data-a="sd">こうかおん: ${S.set.snd?'ON':'OFF'}</button> <button data-a="nm">なまえを ほぞん</button></div>
+<div class="card"><b>きろくの バックアップ</b><br><small>おなじ たんまつ・ブラウザでの ほぞんです。じどうでは ほかの たんまつに うつりません。</small><textarea id="ex" rows="4">${esc(JSON.stringify(S))}</textarea><div class="grid" style="margin-top:8px"><button class="b" data-a="dl">ダウンロード</button><button class="g" data-a="imp">この ないようで ふっかつ</button></div></div>
+<div class="card"><small>とうろく: 1ねん ${K.filter(k=>k.g==1).length}じ / 2ねん ${K.filter(k=>k.g==2).length}じ。1じに つき PDFの ことば 1つ。</small></div><button class="r" data-a="rst" style="width:100%">ぜんぶ けす</button>`}
+
+/* ===== イベント ===== */
+const act={go:start,home:()=>{G=null;home()},chk,show,next,col,set:sett,info,
+nm(){const v=$('nm').value.trim();if(v){S.name=v;save()}home()},
+self(v){fin(v=='1','')},clr(){G.clr&&G.clr()},mdl(){const m=$('mdl');m.style.display=m.style.display=='flex'?'none':'flex'},
+gr(v){S.set.g=v;save();sett()},sd(){S.set.snd=!S.set.snd;save();sett()},
+dl(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='kanji-bouken.json';a.click()},
+imp(){try{const o=JSON.parse($('ex').value);if(!o||typeof o.lv!='number'||typeof o.items!='object')throw 0;S=Object.assign(def(),o);save();toast('ふっかつしました');home()}catch(e){toast('よみこめません。ただしい データを いれてね')}},
+rst(){if(confirm('ほんとうに ぜんぶ けしますか？')){S=def();save();home()}}};
+app.onclick=e=>{const b=e.target.closest('[data-a]');if(b){if(b.dataset.a=='go')act.go(b.dataset.v);else act[b.dataset.a](b.dataset.v)}};
+app.onkeydown=e=>{if(e.key=='Enter'&&!e.isComposing){if(e.target.id=='ans')chk();else if(G&&G.done&&e.target.tagName!='TEXTAREA')next()}};
+load();home();
+</script></body></html>
