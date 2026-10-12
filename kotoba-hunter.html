@@ -305,6 +305,58 @@ button:focus-visible,input:focus-visible{outline-color:#e6ae25;box-shadow:0 0 0 
 }
 @media(prefers-reduced-motion:reduce){.hero-home-image{animation:none!important;transition:none!important}}
 /* ===== End home banner artwork ===== */
+
+/* ===== Camp overhaul: backgrounds and level-based tents ===== */
+.camp-stage.camp-stage-scenic{display:block;position:relative;isolation:isolate;min-height:300px;height:clamp(270px,36vw,390px);padding:0;overflow:hidden;border-radius:24px;border:1px solid #c5d8bb;background:linear-gradient(180deg,#ccebf4 0%,#e8f4d9 58%,#9dcf83 59%,#6da85c 100%);box-shadow:inset 0 1px 0 #ffffff9c,0 6px 0 #e0ead9}
+.camp-stage.camp-stage-scenic:before,.camp-stage.camp-stage-scenic:after{display:none;content:none}
+.camp-stage-scenic[data-background="bg2"]{background:linear-gradient(180deg,#c7eafa 0%,#d9f4f4 48%,#82c9dd 49%,#a6dfdf 66%,#7db58a 67%,#568c67 100%)}
+.camp-stage-scenic[data-background="bg3"]{background:linear-gradient(180deg,#1e315f 0%,#5c6ea0 48%,#445c51 49%,#263f35 100%)}
+.camp-stage-scenic[data-background="bg4"]{background:linear-gradient(180deg,#d9f0fa 0%,#f8fbff 48%,#d8e9f7 49%,#c6d6ee 68%,#aab9d5 69%,#8799bf 100%)}
+.camp-stage-scenic[data-background="bg5"]{background:linear-gradient(180deg,#c8effb 0%,#fce2f3 42%,#ffe8a6 43%,#c6edb4 70%,#86c8a0 71%,#6aa8a6 100%)}
+.camp-background-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:-2}
+.camp-stage-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#132a3510 0%,transparent 38%,#102b2318 100%);pointer-events:none}
+.camp-scene-tags{position:absolute;left:14px;right:14px;top:13px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;z-index:2;flex-wrap:wrap}
+.camp-scene-tag{display:inline-flex;align-items:center;gap:5px;padding:8px 12px;border:1px solid #ffffffb0;border-radius:999px;background:#fffdf0e8;color:#254b3d;box-shadow:0 3px 10px #183a2814;font-size:13px;font-weight:950;backdrop-filter:blur(5px)}
+.camp-scene-tag.tent-tag{background:#f8f4ffed;color:#51436d}
+.camp-main-tent-wrap{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);width:min(48%,260px);height:64%;display:grid;place-items:end center;z-index:1}
+.camp-main-tent-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 9px 9px #213a3238)}
+.camp-tent-fallback{font-size:clamp(72px,11vw,128px);line-height:1;filter:drop-shadow(0 8px 5px #193a2d40);place-self:end center}
+.camp-tent-fallback[hidden],.camp-shop-fallback[hidden]{display:none!important}
+.camp-scene-bottom{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:9px 12px;background:linear-gradient(90deg,#ffffff00,#ffffffad 20%,#ffffffbd 80%,#ffffff00);font-size:12px;font-weight:900;color:#294d3d;text-shadow:0 1px 0 #fff}
+.camp-stage-scenic .camp-scene-sparkle{z-index:1;left:14%;top:39%;color:#fff4b4;font-size:30px;text-shadow:0 2px 9px #ffffffaa}
+.camp-stage-scenic .camp-scene-sparkle.second{left:auto;right:17%;top:31%;font-size:23px}
+.camp-current-note{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:13px;padding:11px 14px;background:#f6f9f0;border:1px solid #e0e9d8;border-radius:15px;font-size:13px;color:var(--muted)}
+.camp-current-note strong{color:var(--leaf);font-size:14px}
+.camp-note-dot{color:#b2c2ad}
+.camp-shop-section{scroll-margin-top:12px}
+.camp-shop-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.camp-shop-item{overflow:hidden}
+.camp-shop-visual{position:relative;isolation:isolate;height:168px;border-radius:16px;overflow:hidden;display:grid;place-items:center;border:1px solid #ffffffc9;background:linear-gradient(145deg,#e4f3da,#b9dcad);box-shadow:inset 0 1px 0 #fff;margin-bottom:2px}
+.camp-shop-visual[data-background="bg2"]{background:linear-gradient(180deg,#c8eaf7,#d9f1f0 52%,#b3dfe4 53%,#8ac1c7)}
+.camp-shop-visual[data-background="bg3"]{background:linear-gradient(180deg,#263865,#7588b2 65%,#455c51)}
+.camp-shop-visual[data-background="bg4"]{background:linear-gradient(150deg,#d8eff8,#ffffff 45%,#d9e2f8 72%,#c8d4ed)}
+.camp-shop-visual[data-background="bg5"]{background:linear-gradient(140deg,#b9e8fa,#f8d8f1 38%,#fff1b5 62%,#bde9af)}
+.camp-background-visual>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.camp-shop-fallback{position:relative;z-index:1;display:grid;place-items:center;font-size:57px;filter:drop-shadow(0 4px 3px #193a2d20)}
+.camp-visual-caption{position:absolute;z-index:2;left:8px;bottom:8px;padding:5px 8px;border-radius:999px;background:#fffdf0e8;color:#2b5b42;font-size:11px;font-weight:950}
+.tent-visual{background:linear-gradient(145deg,#faf4de,#d9eacb)}
+.tent-level-2{background:linear-gradient(145deg,#ebf6d9,#a5d18f)}
+.tent-level-3{background:linear-gradient(145deg,#dce7ff,#a7ade1 54%,#f9e8bd)}
+.tent-level-4{background:linear-gradient(145deg,#e2ddff,#c9c1f2 52%,#fff0c5)}
+.tent-level-5{background:linear-gradient(145deg,#ffddf0,#d8e4ff 35%,#fff0b1 67%,#c9f3d7)}
+.tent-visual>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:8px;z-index:0;filter:drop-shadow(0 6px 6px #203d3030)}
+.tent-level-badge{position:absolute;left:8px;top:8px;z-index:2;padding:5px 8px;border-radius:999px;background:#ffffffdf;border:1px solid #ffffff;color:#324e41;font-size:11px;font-weight:1000;box-shadow:0 2px 6px #223e3015}
+.tent-rarity-4 .tent-level-badge{background:#f3efff;color:#604b8a;border-color:#dcd2ff}
+.tent-rarity-5 .tent-level-badge{background:#fff2bd;color:#8a6217;border-color:#f7dc73}
+.camp-shop-item .shop-item-name{min-height:24px}
+.camp-shop-item .shop-item-desc{min-height:40px}
+.camp-shop-item .shop-item-price{align-items:flex-start}
+.camp-shop-item .shop-status{line-height:1.45}
+.camp-shop-item button{margin-top:auto}
+@media(max-width:760px){.camp-shop-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.camp-stage.camp-stage-scenic{min-height:260px;height:clamp(250px,48vw,330px)}.camp-main-tent-wrap{width:min(54%,230px);height:60%;bottom:32px}}
+@media(max-width:460px){.camp-shop-grid{grid-template-columns:1fr}.camp-shop-visual{height:185px}.camp-stage.camp-stage-scenic{height:260px;min-height:240px}.camp-scene-tags{left:8px;right:8px;top:8px}.camp-scene-tag{font-size:11px;padding:6px 8px}.camp-main-tent-wrap{width:61%;height:58%;bottom:34px}.camp-scene-bottom{font-size:10px;padding:8px 5px}.camp-current-note{font-size:12px;gap:5px}}
+/* ===== End camp overhaul ===== */
+
 </style>
 </head>
 <body>
@@ -314,7 +366,7 @@ button:focus-visible,input:focus-visible{outline-color:#e6ae25;box-shadow:0 0 0 
 'use strict';
 const QUESTIONS = JSON.parse(document.getElementById('questionData').textContent);
 const STORAGE_KEY = 'kotoba_hunter_save_v1';
-const SAVE_VERSION = 2;
+const SAVE_VERSION = 3;
 const AREA_INFO = [
  {id:'forest',name:'なかまのもり',subtitle:'ことばを なかまに わけよう',icon:'🌳',color:'#dff2e5',desc:'たべものや どうぶつなど、にている なかまを さがすよ。'},
  {id:'opposite',name:'はんたいさん',subtitle:'ぎゃくの いみを みつけよう',icon:'⛰️',color:'#ffefd0',desc:'はんたいの いみの ことばを みつけるよ。'},
@@ -348,14 +400,28 @@ const SHOP_ITEMS = [
  {id:'word-gem',name:'ことばの ほうせき',description:'ことばの ちからが つまった ほうせき。',icon:'💎',slot:'treasure',slotLabel:'おたから',cost:60},
  {id:'night-pack',name:'よるの リュック',description:'ぼうけんの もちものを いれる リュック。',icon:'🎒',slot:'treasure',slotLabel:'おたから',cost:120}
 ];
+const CAMP_BACKGROUNDS = [
+ {id:'bg1',name:'ことばの もり',description:'はじめから つかえる、みどりの もり。',image:'https://mrs-shrimp.github.io/2kokugo/image/bg1.png',cost:0,icon:'🌳',theme:'forest'},
+ {id:'bg2',name:'みずうみの ほとり',description:'みずべで ゆったり たんけんしよう。',image:'https://mrs-shrimp.github.io/2kokugo/image/bg2.png',cost:70,icon:'🏞️',theme:'lake'},
+ {id:'bg3',name:'ほしぞらの もり',description:'ほしが かがやく、よるの もり。',image:'https://mrs-shrimp.github.io/2kokugo/image/bg3.png',cost:150,icon:'🌌',theme:'night'},
+ {id:'bg4',name:'こおりの たに',description:'こおりの いろに つつまれた たに。',image:'https://mrs-shrimp.github.io/2kokugo/image/bg4.png',cost:280,icon:'❄️',theme:'ice'},
+ {id:'bg5',name:'にじの らくえん',description:'にじいろに かがやく、とくべつな せかい。',image:'https://mrs-shrimp.github.io/2kokugo/image/bg5.png',cost:450,icon:'🌈',theme:'rainbow'}
+];
+const CAMP_TENTS = [
+ {id:'tent1',name:'はじまりの テント',description:'そぼくな ぬのと、きの ささえ。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/tent1.png',cost:0,level:1,icon:'🏕️'},
+ {id:'tent2',name:'もりの テント',description:'みどりの ぬのと、はっぱの かざり。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/tent2.png',cost:70,level:2,icon:'⛺'},
+ {id:'tent3',name:'ほしぞら テント',description:'ほしや つきの もようが かがやく。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/tent3.png',cost:150,level:3,icon:'🌠'},
+ {id:'tent4',name:'まほうの テント',description:'まほうの ひかりと ほうせきの かざり。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/tent4.png',cost:280,level:4,icon:'💎'},
+ {id:'tent5',name:'でんせつの テント',description:'にじいろの ひかりを はなつ、とくべつな テント。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/tent5.png',cost:450,level:5,icon:'🌈'}
+];
 const LEVEL_TITLES = ['ことばのたまご','ことばのたんけんか','ことばのたつじん','ことばのめいじん','ことばのはかせ','ことばのレジェンド'];
 const TYPE_LABELS = {category:'なかまを さがそう',odd:'なかまでは ないもの',pair:'はんたいの ことば',meaning:'きもちや ようす',onomatopoeia:'おとや ようす',context:'ぶんに ぴったり'};
 const LEVEL_12_KANJI = Array.from('一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話');
 const HIRAGANA_SUGGESTIONS = {'分類':'なかま分け','選択':'えらぶ','確認':'たしかめる','経験値':'けいけんち','獲得':'手に入れる','難易度':'むずかしさ','解説':'せつめい','学習':'べんきょう','正解':'せいかい','問題':'もんだい','図鑑':'ずかん','設定':'せってい','履歴':'きろく','保存':'ほぞん','再挑戦':'もういちど','反対':'はんたい','意味':'いみ','達成':'たっせい','称号':'しょうごう'};
 const STATIC_TEXTS = [
- 'ことばハンター','ことばを あつめて、ことばの たんけんに でかけよう！','なまえ','ひらがなで なまえを いれてね','ぼうけんを はじめる','ホーム','ホームへ','もどる','せってい','なかまのもり','はんたいさん','ことばのいずみ','オノマトペどうくつ','ことばのそうげん','ぼうけんモード','れんしゅうモード','にがてこくふくモード','ことばずかん','がくしゅうきろく','せいかい！','おしい！','ヒントをみる','もういちど','こたえをみる','つぎの もんだい','おつかれさま！','ほぞんする','なまえを かえる','おと','うごきを すくなくする','リセット','チェックする','もじチェック','ハンターカード','レベル','けいけんち','プレイかいすう','クリアした エリア','つぎの レベルまで','あつめた しょうごう','きょうは なにを する？','ぼうけんを つづける','ぼうけんへ','れんしゅうする','にがてを みる','ハンターの きろく','どの エリアへ いく？','1かい 10もん。じかんは きにせず かんがえよう。','せいかい！ ことばを ひとつ ゲット！','おしい！ もういちど かんがえよう','ヒントだよ','おつかれさま！','たんけんの けっか','ふくしゅうしよう','まだ であっていない','であった','さいしょに せいかい','ぜんぶ','しぼりこみ','さいきんの ぼうけん','この ことばの はんたいは？','ことばを ひとつ おして、あう はこを おしてね。','それいがい','ほかの なかま','なかまでは ない','いいね！ ひとつ わけられたよ。','おっと、ちがう はこみたい。ことばを よくみて、もういちど やってみよう。','ぜんぶ わけられたよ！','エリアで しぼる','きろくで しぼる','こたえた かいすう','せいかい','ふくしゅう','なまえを おしえてね','もうすこし！','クリア！','けっかを みよう','こたえを みる','リセット','ON','OFF','おみせ','コイン','コインを ためよう','ことばの はっけん','であった ことば','ハンターの キャンプ','キャンプを かざろう','そうびする','はずす','かう','そうびちゅう','コインが たりないよ','ホームへ もどる','ことばの たから','おみせへ','ずかんを みる'
+ 'ことばハンター','ことばを あつめて、ことばの たんけんに でかけよう！','なまえ','ひらがなで なまえを いれてね','ぼうけんを はじめる','ホーム','ホームへ','もどる','せってい','なかまのもり','はんたいさん','ことばのいずみ','オノマトペどうくつ','ことばのそうげん','ぼうけんモード','れんしゅうモード','にがてこくふくモード','ことばずかん','がくしゅうきろく','せいかい！','おしい！','ヒントをみる','もういちど','こたえをみる','つぎの もんだい','おつかれさま！','ほぞんする','なまえを かえる','おと','うごきを すくなくする','リセット','チェックする','もじチェック','ハンターカード','レベル','けいけんち','プレイかいすう','クリアした エリア','つぎの レベルまで','あつめた しょうごう','きょうは なにを する？','ぼうけんを つづける','ぼうけんへ','れんしゅうする','にがてを みる','ハンターの きろく','どの エリアへ いく？','1かい 10もん。じかんは きにせず かんがえよう。','せいかい！ ことばを ひとつ ゲット！','おしい！ もういちど かんがえよう','ヒントだよ','おつかれさま！','たんけんの けっか','ふくしゅうしよう','まだ であっていない','であった','さいしょに せいかい','ぜんぶ','しぼりこみ','さいきんの ぼうけん','この ことばの はんたいは？','ことばを ひとつ おして、あう はこを おしてね。','それいがい','ほかの なかま','なかまでは ない','いいね！ ひとつ わけられたよ。','おっと、ちがう はこみたい。ことばを よくみて、もういちど やってみよう。','ぜんぶ わけられたよ！','エリアで しぼる','きろくで しぼる','こたえた かいすう','せいかい','ふくしゅう','なまえを おしえてね','もうすこし！','クリア！','けっかを みよう','こたえを みる','リセット','ON','OFF','おみせ','コイン','コインを ためよう','ことばの はっけん','であった ことば','ハンターの キャンプ','キャンプを かざろう','そうびする','はずす','かう','そうびちゅう','コインが たりないよ','ホームへ もどる','ことばの たから','おみせへ','ずかんを みる','はいけいと テントの おみせ','5つの はいけい','5つの テント','せかいを えらぼう','レベルアップで ひろがる','はいけいは かうと すぐに きりかえられるよ','はいけい：','テント：','いまの はいけい','いまの テント','せっていちゅう','この はいけいに する','この テントに する','レベル で かえる','はじめから','コインで かえる もの'
 ];
-const DEFAULT_STATE = () => ({version:SAVE_VERSION,playerName:'',xp:0,level:1,coins:0,coinAwardedQuestionIds:[],ownedShopItems:[],equippedShopItems:{},earnedTitles:[],clearedAreas:[],clearedMissions:[],seenQuestionIds:[],xpAwardedQuestionIds:[],questionStats:{},wordStats:{},answerHistory:[],sessions:[],playCount:0,soundOn:false,reduceMotion:false,activeSession:null,lastScreen:'home'});
+const DEFAULT_STATE = () => ({version:SAVE_VERSION,playerName:'',xp:0,level:1,coins:0,coinAwardedQuestionIds:[],ownedShopItems:[],equippedShopItems:{},ownedBackgrounds:['bg1'],ownedTents:['tent1'],equippedBackground:'bg1',equippedTent:'tent1',earnedTitles:[],clearedAreas:[],clearedMissions:[],seenQuestionIds:[],xpAwardedQuestionIds:[],questionStats:{},wordStats:{},answerHistory:[],sessions:[],playCount:0,soundOn:false,reduceMotion:false,activeSession:null,lastScreen:'home'});
 let appState = null;
 let page = 'welcome';
 let selectedMode = 'practice';
@@ -394,6 +460,17 @@ function safeLoad(){
    const item=SHOP_ITEMS.find(x=>x.id===id);
    if(!item||item.slot!==slot||!merged.ownedShopItems.includes(id))delete merged.equippedShopItems[slot];
   }
+  // Upgrade older saves without deleting their learning history, coins, or legacy shop data.
+  if(!Array.isArray(merged.ownedBackgrounds))merged.ownedBackgrounds=['bg1'];
+  merged.ownedBackgrounds=[...new Set(merged.ownedBackgrounds.filter(id=>CAMP_BACKGROUNDS.some(x=>x.id===id)))];
+  if(!merged.ownedBackgrounds.includes('bg1'))merged.ownedBackgrounds.unshift('bg1');
+  if(!Array.isArray(merged.ownedTents))merged.ownedTents=['tent1'];
+  merged.ownedTents=[...new Set(merged.ownedTents.filter(id=>CAMP_TENTS.some(x=>x.id===id)))];
+  if(!merged.ownedTents.includes('tent1'))merged.ownedTents.unshift('tent1');
+  if(!CAMP_BACKGROUNDS.some(x=>x.id===merged.equippedBackground&&merged.ownedBackgrounds.includes(x.id)))merged.equippedBackground='bg1';
+  const loadedLevel=getLevelFromXP(merged.xp);
+  const restoredTent=CAMP_TENTS.find(x=>x.id===merged.equippedTent&&merged.ownedTents.includes(x.id)&&x.level<=loadedLevel);
+  merged.equippedTent=restoredTent?restoredTent.id:'tent1';
   merged.answerHistory=merged.answerHistory.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).slice(-1200);
   merged.sessions=merged.sessions.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).slice(-300);
   for(const k of ['questionStats','wordStats']) if(!merged[k]||typeof merged[k]!=='object'||Array.isArray(merged[k])) merged[k]={};
@@ -461,7 +538,7 @@ function validateQuestionBank(){
  return {total:QUESTIONS.length,issues,counts:count};
 }
 function collectAuditTexts(){
- const out=[...STATIC_TEXTS,...AREA_INFO.flatMap(a=>[a.name,a.subtitle,a.desc]),...LEVEL_TITLES,...Object.values(TYPE_LABELS),...SHOP_ITEMS.flatMap(i=>[i.name,i.description,i.slotLabel])];
+ const out=[...STATIC_TEXTS,...AREA_INFO.flatMap(a=>[a.name,a.subtitle,a.desc]),...LEVEL_TITLES,...Object.values(TYPE_LABELS),...SHOP_ITEMS.flatMap(i=>[i.name,i.description,i.slotLabel]),...CAMP_BACKGROUNDS.flatMap(i=>[i.name,i.description]),...CAMP_TENTS.flatMap(i=>[i.name,i.description])];
  for(const q of QUESTIONS)out.push(q.prompt,...q.choices,q.answer,q.hint,q.explanation,q.word,q.meaning,q.example,q.sortLabel||'');
  out.push(appState.playerName||'');
  const active=document.getElementById('app');if(active)out.push(active.innerText||'');
@@ -500,14 +577,40 @@ function renderWordProgress(){
 }
 function renderHome(){return `${showNotice()}${homeHero(`<div style="margin-top:20px"><button class="primary" data-action="adventure">ぼうけんを つづける　→</button></div>`)}${progressPanel()}${renderWordProgress()}${renderCampPreview(false)}<section class="panel"><div class="panel-head"><div><div class="section-label">あそびかたを えらぼう</div><h2>きょうは なにを する？</h2></div></div><div class="mode-grid"><article class="mode-card"><div class="mode-icon" aria-hidden="true">🧭</div><h3>ぼうけん</h3><p>エリアを じゅんばんに すすんで、ことばの たからを あつめよう。</p><button class="primary" data-action="adventure">ぼうけんへ</button></article><article class="mode-card"><div class="mode-icon" aria-hidden="true">🌱</div><h3>れんしゅう</h3><p>すきな エリアを えらんで、なんどでも とりくめるよ。</p><button class="secondary" data-action="practice">れんしゅうする</button></article><article class="mode-card"><div class="mode-icon" aria-hidden="true">🔎</div><h3>にがてこくふく</h3><p>まちがえた もんだいや、もういちど たしかめたい ことばを れんしゅう。</p><button class="soft-btn" data-action="weak">にがてを みる</button></article></div></section><section class="panel"><div class="panel-head"><div><div class="section-label">あつめた ことばを みよう</div><h2>ハンターの きろく</h2></div></div><div class="button-row"><button class="secondary" data-action="dictionary">ことばずかん</button><button class="soft-btn" data-action="history">がくしゅうきろく</button><button class="soft-btn" data-action="rename">なまえを かえる</button></div></section>`;}
 function renderAreas(){const adventure=selectedMode==='adventure';const unlockCount=1+Math.max(-1,...AREA_INFO.map((a,i)=>appState.clearedAreas.includes(a.id)?i: -1));return `<section class="panel"><div class="panel-head"><div><div class="section-label">${adventure?'ぼうけんモード':'れんしゅうモード'}</div><h1 class="screen-title">どの エリアへ いく？</h1><p class="muted">1かい 10もん。じかんは きにせず かんがえよう。エリアごとの ことばの はっけんかずも みられるよ。</p></div><button class="soft-btn" data-action="home">ホームへ</button></div><div class="area-grid">${AREA_INFO.map((a,i)=>{const locked=adventure&&i>unlockCount;const done=appState.clearedAreas.includes(a.id);const count=QUESTIONS.filter(q=>q.area===a.id).length;const vocab=AREA_WORDS[a.id]||[];const met=encounteredWordsInArea(a.id).size;return `<button class="area-card ${locked?'locked':''}" data-action="selectArea" data-area="${a.id}" ${locked?'disabled':''}><span class="area-icon" style="background:${a.color}">${a.icon}</span><span class="area-info"><strong>${esc(a.name)}</strong><small>${esc(a.desc)}</small><small class="area-word-count">であった ことば：${met}/${vocab.length}</small></span><span class="area-state">${locked?'まだ':done?'クリア！':`${count}もん`}</span></button>`;}).join('')}</div>${adventure&&unlockCount<4?'<div class="notice">つぎの エリアは、まえの エリアを クリアすると あくよ。</div>':''}</section>`;}
+function getCampBackground(id){return CAMP_BACKGROUNDS.find(item=>item.id===id)||CAMP_BACKGROUNDS[0];}
+function getCampTent(id){return CAMP_TENTS.find(item=>item.id===id)||CAMP_TENTS[0];}
 function renderCampPreview(onShopPage=false){
- const items=SHOP_SLOTS.map(slot=>({slot,item:equippedItem(slot.id)}));
- const head=equippedItem('head'),buddy=equippedItem('buddy'),camp=equippedItem('camp'),sky=equippedItem('sky'),treasure=equippedItem('treasure');
- return `<section class="panel camp-panel"><div class="panel-head"><div><div class="section-label">じぶんだけの ばしょ</div><h2>ハンターの キャンプ</h2><p class="muted">コインで かった もちものを そうびすると、ここに でてくるよ。</p></div><button class="soft-btn" data-action="${onShopPage?'home':'shop'}">${onShopPage?'ホームへ':'おみせへ　🪙'}</button></div><div class="camp-stage" aria-label="そうびを かざった キャンプ"><span class="camp-scene-sparkle" aria-hidden="true">✦</span><span class="camp-scene-sparkle second" aria-hidden="true">✧</span><div class="camp-person"><span class="camp-person-icon">${head?esc(head.icon)+' 🧭':'🧭'}</span><small>ハンター</small></div><div class="camp-main-tent" aria-hidden="true">🏕️</div><span style="position:absolute;right:26%;top:17px;font-size:25px;z-index:1" aria-hidden="true">${sky?esc(sky.icon):'✨'}</span><div class="camp-person"><span class="camp-person-icon">${buddy?esc(buddy.icon):'🌱'}</span><small>なかま</small></div><div style="position:absolute;left:12px;bottom:9px;font-size:25px" aria-hidden="true">${camp?esc(camp.icon):'🌿'}</div><div style="position:absolute;right:13px;bottom:8px;font-size:25px" aria-hidden="true">${treasure?esc(treasure.icon):'🌼'}</div></div><div class="camp-equipment-grid">${items.map(({slot,item})=>`<div class="camp-equipment ${item?'has-item':''}"><div class="camp-equipment-icon">${item?esc(item.icon):slot.emptyIcon}</div><div class="camp-equipment-label">${esc(slot.label)}</div><div class="camp-equipment-name">${item?esc(item.name):'まだ なし'}</div></div>`).join('')}</div></section>`;
+ const background=getCampBackground(appState.equippedBackground);
+ const tent=getCampTent(appState.equippedTent);
+ return `<section class="panel camp-panel"><div class="panel-head"><div><div class="section-label">じぶんだけの ばしょ</div><h2>ハンターの キャンプ</h2><p class="muted">はいけいと テントを えらんで、じぶんだけの キャンプに しよう。</p></div><button class="soft-btn" data-action="${onShopPage?'home':'shop'}">${onShopPage?'ホームへ':'おみせへ　🪙'}</button></div><div class="camp-stage camp-stage-scenic" data-background="${background.id}" aria-label="${esc(background.name)}、${esc(tent.name)}を そうびした キャンプ"><img class="camp-background-image" src="${esc(background.image)}" alt="" aria-hidden="true" loading="lazy" onerror="this.hidden=true"><div class="camp-stage-shade" aria-hidden="true"></div><div class="camp-scene-tags"><span class="camp-scene-tag">${esc(background.icon)} ${esc(background.name)}</span><span class="camp-scene-tag tent-tag">⛺ ${esc(tent.name)}</span></div><span class="camp-scene-sparkle" aria-hidden="true">✦</span><span class="camp-scene-sparkle second" aria-hidden="true">✧</span><div class="camp-main-tent-wrap"><img class="camp-main-tent-image" src="${esc(tent.image)}" alt="${esc(tent.name)}" loading="lazy" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="camp-tent-fallback" aria-hidden="true">${tent.icon}</span></div><div class="camp-scene-bottom"><span>はいけい：${esc(background.name)}</span><span>テント：${esc(tent.name)}</span></div></div><div class="camp-current-note"><span>いまの はいけい</span><strong>${esc(background.name)}</strong><span class="camp-note-dot">・</span><span>いまの テント</span><strong>${esc(tent.name)}</strong></div></section>`;
+}
+function renderBackgroundCard(background){
+ const coins=Math.max(0,Number(appState.coins)||0);
+ const owned=(appState.ownedBackgrounds||[]).includes(background.id);
+ const selected=appState.equippedBackground===background.id;
+ const enough=coins>=background.cost;
+ let button='';
+ if(owned){button=`<button class="${selected?'soft-btn':'secondary'}" data-action="equipBackground" data-background="${background.id}" ${selected?'disabled':''}>${selected?'せっていちゅう':'この はいけいに する'}</button>`;}
+ else{button=`<button class="primary" data-action="buyBackground" data-background="${background.id}" ${enough?'':'disabled'}>${enough?`🪙 ${background.cost} コインで かう`:`あと ${background.cost-coins} コイン`}</button>`;}
+ const status=selected?'いま つかっているよ':owned?'もう もっているよ':'コインを ためて ゲット';
+ return `<article class="shop-item camp-shop-item background-shop-item"><div class="camp-shop-visual camp-background-visual" data-background="${background.id}"><img src="${esc(background.image)}" alt="" loading="lazy" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true"><span class="camp-shop-fallback" aria-hidden="true">${background.icon}</span><span class="camp-visual-caption">はいけい</span></div><div class="shop-item-name">${esc(background.name)}</div><div class="shop-item-desc">${esc(background.description)}</div><div class="shop-item-price"><span class="shop-price-pill">🪙 ${background.cost===0?'はじめから':background.cost+' コイン'}</span><span class="shop-status">${status}</span></div>${button}</article>`;
+}
+function renderTentCard(tent){
+ const coins=Math.max(0,Number(appState.coins)||0);
+ const owned=(appState.ownedTents||[]).includes(tent.id);
+ const selected=appState.equippedTent===tent.id;
+ const levelLocked=(Number(appState.level)||1)<tent.level;
+ const enough=coins>=tent.cost;
+ let button='';
+ if(levelLocked){button=`<button class="soft-btn" disabled>レベル ${tent.level}で かえる</button>`;}
+ else if(owned){button=`<button class="${selected?'soft-btn':'secondary'}" data-action="equipTent" data-tent="${tent.id}" ${selected?'disabled':''}>${selected?'そうびちゅう':'この テントに する'}</button>`;}
+ else{button=`<button class="primary" data-action="buyTent" data-tent="${tent.id}" ${enough?'':'disabled'}>${enough?`🪙 ${tent.cost} コインで かう`:`あと ${tent.cost-coins} コイン`}</button>`;}
+ const status=levelLocked?`レベル ${tent.level}で あくよ`:selected?'いま そうびしているよ':owned?'もう もっているよ':'レベルと コインを ためよう';
+ return `<article class="shop-item camp-shop-item tent-shop-item tent-rarity-${tent.level}"><div class="camp-shop-visual tent-visual tent-level-${tent.level}"><img src="${esc(tent.image)}" alt="" loading="lazy" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true"><span class="camp-shop-fallback" aria-hidden="true">${tent.icon}</span><span class="tent-level-badge">Lv.${tent.level}</span></div><div class="shop-item-name">${esc(tent.name)}</div><div class="shop-item-slot">レベル ${tent.level} の テント</div><div class="shop-item-desc">${esc(tent.description)}</div><div class="shop-item-price"><span class="shop-price-pill">🪙 ${tent.cost===0?'はじめから':tent.cost+' コイン'}</span><span class="shop-status">${status}</span></div>${button}</article>`;
 }
 function renderShop(){
  const coins=Math.max(0,Number(appState.coins)||0);
- return `<section class="panel"><div class="panel-head"><div><div class="section-label">コインを つかおう</div><h1 class="screen-title">ことばハンターの おみせ</h1><p class="muted">せいかいして コインを ため、すきな もちものを えらぼう。</p></div><button class="soft-btn" data-action="home">ホームへ</button></div><div class="shop-intro"><div><div style="font-weight:950;font-size:18px">🪙 いまの コイン</div><div class="muted">ひとつの もんだいで コインが もらえるのは 1かいだけ。はじめて せいかいすると 4〜7コイン ゲット！</div></div><div class="coin-wallet"><span aria-hidden="true">🪙</span><strong>${coins}</strong><small>コイン</small></div></div></section>${renderCampPreview(true)}<section class="panel"><div class="panel-head"><div><div class="section-label">もちものを えらぼう</div><h2>コインで かえる もの</h2><p class="muted">かうと じぶんの ものになるよ。そうびすると、キャンプの えが かわるよ。</p></div></div><div class="shop-grid">${SHOP_ITEMS.map(item=>{const owned=isShopItemOwned(item.id),equipped=isShopItemEquipped(item),enough=coins>=item.cost;const button=owned?`<button class="${equipped?'soft-btn':'secondary'}" data-action="${equipped?'unequipShopItem':'equipShopItem'}" data-item="${item.id}">${equipped?'そうびちゅう ・ はずす':'そうびする'}</button>`:`<button class="primary" data-action="buyShopItem" data-item="${item.id}" ${enough?'':'disabled'}>${enough?'🪙 '+item.cost+' コインで かう':'あと '+(item.cost-coins)+' コイン'}</button>`;return `<article class="shop-item"><div class="shop-item-top"><div class="shop-item-icon" aria-hidden="true">${esc(item.icon)}</div><div><div class="shop-item-name">${esc(item.name)}</div><div class="shop-item-slot">${esc(item.slotLabel)} の もちもの</div></div></div><div class="shop-item-desc">${esc(item.description)}</div><div class="shop-item-price"><span class="shop-price-pill">🪙 ${item.cost} コイン</span><span class="shop-status">${owned?(equipped?'いま そうびしているよ':'もう もっているよ'):'おかねを ためて ゲット'}</span></div>${button}</article>`;}).join('')}</div><div class="button-row" style="margin-top:20px"><button class="soft-btn" data-action="dictionary">ことばずかんを みる</button><button class="soft-btn" data-action="history">がくしゅうきろく</button></div></section>`;
+ return `${showNotice()}<section class="panel"><div class="panel-head"><div><div class="section-label">キャンプを そだてよう</div><h1 class="screen-title">はいけいと テントの おみせ</h1><p class="muted">ことばを まなんで コインを ため、すきな けしきを えらぼう。</p></div><button class="soft-btn" data-action="home">ホームへ</button></div><div class="shop-intro"><div><div style="font-weight:950;font-size:18px">🪙 いまの コイン</div><div class="muted">せいかいして コインを ためよう。はいけいは かうと すぐに きりかえられるよ。</div></div><div class="coin-wallet"><span aria-hidden="true">🪙</span><strong>${coins}</strong><small>コイン</small></div></div></section>${renderCampPreview(true)}<section class="panel camp-shop-section"><div class="panel-head"><div><div class="section-label">せかいを えらぼう</div><h2>5つの はいけい</h2><p class="muted">たかい はいけいほど、たくさんの コインが ひつようだよ。</p></div></div><div class="shop-grid camp-shop-grid">${CAMP_BACKGROUNDS.map(renderBackgroundCard).join('')}</div></section><section class="panel camp-shop-section"><div class="panel-head"><div><div class="section-label">レベルアップで ひろがる</div><h2>5つの テント</h2><p class="muted">レベルが あがると、あたらしい テントが かえるようになるよ。</p></div><span class="area-state">いまの レベル：${appState.level}</span></div><div class="shop-grid camp-shop-grid">${CAMP_TENTS.map(renderTentCard).join('')}</div></section><section class="panel"><div class="button-row"><button class="soft-btn" data-action="dictionary">ことばずかんを みる</button><button class="soft-btn" data-action="history">がくしゅうきろく</button></div></section>`;
 }
 function chooseQuestions(area,mode){let pool=QUESTIONS.filter(q=>q.area===area&&validQuestionIds.has(q.id));if(pool.length<10)pool=QUESTIONS.filter(q=>validQuestionIds.has(q.id));const stats=appState.questionStats||{};const score=q=>{const s=stats[q.id]||{};const seen=Number(s.seen)||0;const wrong=Number(s.wrong)||0;const solved=Number(s.solved)||0;const due=s.reviewNeeded?15:0;const recency=s.lastSeen?Math.max(0,14-(Date.now()-new Date(s.lastSeen).getTime())/86400000):5;const levelFit=(q.difficulty<=appState.level?3:0);return due+wrong*3-solved*.55-seen*.65-recency*.25+levelFit+Math.random()*3;};return pool.slice().sort((a,b)=>score(b)-score(a)).slice(0,10).map(q=>q.id);}
 function chooseWeakQuestions(){const stats=appState.questionStats||{};const all=QUESTIONS.filter(q=>validQuestionIds.has(q.id));const priority=q=>{const s=stats[q.id]||{};const wrong=Number(s.wrong)||0;const attempts=Number(s.attempts)||0;const solved=Number(s.solved)||0;const days=s.lastWrong?(Date.now()-new Date(s.lastWrong).getTime())/86400000:30;return (s.reviewNeeded?100:0)+wrong*7+Math.max(0,5-days*.2)+Math.max(0,attempts-solved)*2+Math.random()*1.5;};const failed=all.filter(q=>{const s=stats[q.id]||{};return s.reviewNeeded||(Number(s.wrong)||0)>(Number(s.solved)||0);}).sort((a,b)=>priority(b)-priority(a));let chosen=[];const addQ=q=>{if(q&&!chosen.includes(q.id)&&chosen.length<10)chosen.push(q.id);};
@@ -602,8 +705,35 @@ function handleAction(action,el){
  if(action==='rename'){page='welcome';render();return;}
  if(action==='home'){if(page==='question'&&appState.activeSession){if(!confirm('いまの ぼうけんを やめて、ホームへ もどる？ こたえた きろくは のこるよ。'))return;appState.activeSession=null;saveState();}setPage(appState.playerName?'home':'welcome');return;}
  if(action==='settings'){setPage('settings');return;}
- if(action==='shop'){setPage('shop');return;}
- if(action==='buyShopItem'){
+  if(action==='shop'){setPage('shop');return;}
+  if(action==='buyBackground'){
+   const item=CAMP_BACKGROUNDS.find(x=>x.id===el.dataset.background);
+   if(!item||(appState.ownedBackgrounds||[]).includes(item.id))return;
+   if((Number(appState.coins)||0)<item.cost){storageWarning='コインが たりないよ。もんだいに せいかいして ためよう。';render();return;}
+   appState.coins=Math.max(0,Math.floor(Number(appState.coins)||0)-item.cost);
+   appState.ownedBackgrounds.push(item.id);appState.equippedBackground=item.id;
+   storageWarning='';saveState();render();return;
+  }
+  if(action==='equipBackground'){
+   const item=CAMP_BACKGROUNDS.find(x=>x.id===el.dataset.background);
+   if(item&&(appState.ownedBackgrounds||[]).includes(item.id)){appState.equippedBackground=item.id;storageWarning='';saveState();render();}
+   return;
+  }
+  if(action==='buyTent'){
+   const item=CAMP_TENTS.find(x=>x.id===el.dataset.tent);
+   if(!item||(appState.ownedTents||[]).includes(item.id))return;
+   if((Number(appState.level)||1)<item.level){storageWarning=`この テントは レベル ${item.level}で かえるよ。`;render();return;}
+   if((Number(appState.coins)||0)<item.cost){storageWarning='コインが たりないよ。もんだいに せいかいして ためよう。';render();return;}
+   appState.coins=Math.max(0,Math.floor(Number(appState.coins)||0)-item.cost);
+   appState.ownedTents.push(item.id);appState.equippedTent=item.id;
+   storageWarning='';saveState();render();return;
+  }
+  if(action==='equipTent'){
+   const item=CAMP_TENTS.find(x=>x.id===el.dataset.tent);
+   if(item&&(appState.ownedTents||[]).includes(item.id)&&(Number(appState.level)||1)>=item.level){appState.equippedTent=item.id;storageWarning='';saveState();render();}
+   return;
+  }
+  if(action==='buyShopItem'){
   const item=getShopItem(el.dataset.item);
   if(!item||isShopItemOwned(item.id))return;
   if((Number(appState.coins)||0)<item.cost){storageWarning='コインが たりないよ。もんだいに せいかいして ためよう。';render();return;}
