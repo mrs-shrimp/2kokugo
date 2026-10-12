@@ -357,6 +357,17 @@ button:focus-visible,input:focus-visible{outline-color:#e6ae25;box-shadow:0 0 0 
 @media(max-width:460px){.camp-shop-grid{grid-template-columns:1fr}.camp-shop-visual{height:185px}.camp-stage.camp-stage-scenic{height:260px;min-height:240px}.camp-scene-tags{left:8px;right:8px;top:8px}.camp-scene-tag{font-size:11px;padding:6px 8px}.camp-main-tent-wrap{width:61%;height:58%;bottom:34px}.camp-scene-bottom{font-size:10px;padding:8px 5px}.camp-current-note{font-size:12px;gap:5px}}
 /* ===== End camp overhaul ===== */
 
+
+.camp-decor-slot{position:absolute;z-index:3;bottom:42px;width:clamp(42px,8vw,82px);height:clamp(54px,10vw,100px);display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none}
+.camp-decor-slot img{display:block;width:100%;height:78%;object-fit:contain;filter:drop-shadow(0 5px 4px #1d3b2b38)}
+.camp-decor-slot span{font-size:clamp(30px,5vw,54px)}
+.camp-decor-slot small{font-size:10px;font-weight:900;color:#254b3d;background:#fffdf0df;border-radius:99px;padding:3px 6px;white-space:nowrap}
+.camp-decor-slot button{pointer-events:auto;position:absolute;right:-3px;top:0;border:1px solid #fff;background:#fff4dc;color:#6c3b28;border-radius:50%;width:23px;height:23px;font-weight:900;line-height:1;padding:0}
+.decor-left-edge{left:3%}.decor-left-near{left:24%}.decor-right-near{right:24%}.decor-right-edge{right:3%}
+.camp-decor-slot:empty{display:block}
+.decor-placement .button-row button{flex:1 1 180px}
+.decor-visual{background:linear-gradient(145deg,#f4f0ff,#dff3e8)}
+@media(max-width:460px){.camp-decor-slot{bottom:42px;width:19%;height:78px}.decor-left-near{left:20%}.decor-right-near{right:20%}.camp-decor-slot small{font-size:8px;padding:2px 4px}.camp-decor-slot button{width:20px;height:20px}}
 </style>
 </head>
 <body>
@@ -400,6 +411,22 @@ const SHOP_ITEMS = [
  {id:'word-gem',name:'ことばの ほうせき',description:'ことばの ちからが つまった ほうせき。',icon:'💎',slot:'treasure',slotLabel:'おたから',cost:60},
  {id:'night-pack',name:'よるの リュック',description:'ぼうけんの もちものを いれる リュック。',icon:'🎒',slot:'treasure',slotLabel:'おたから',cost:120}
 ];
+
+const CAMP_DECOR = [
+ {id:'decor1',name:'はなの しげみ',description:'キャンプに いろどりを そえる はな。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_01_flower_bush.png',cost:80,icon:'🌸'},
+ {id:'decor2',name:'まほうの ランタン',description:'ふしぎな ひかりで キャンプを てらす。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_02_magic_lantern.png',cost:120,icon:'🏮'},
+ {id:'decor3',name:'きのこ の はら',description:'ふしぎな きのこが はえる かざり。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_03_mushrooms.png',cost:100,icon:'🍄'},
+ {id:'decor4',name:'まるたの いす',description:'ひとやすみ するのに ぴったりの いす。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_04_log_stool.png',cost:150,icon:'🪵'},
+ {id:'decor5',name:'ほのおの たきび',description:'あたたかな ほのおが ゆれる たきび。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_05_campfire.png',cost:180,icon:'🔥'},
+ {id:'decor6',name:'ぼうけんの かんばん',description:'つぎの ぼうけんへ みちびく かんばん。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_06_signpost.png',cost:180,icon:'🪧'},
+ {id:'decor7',name:'ことりの みずば',description:'ことりたちが あつまる かわいい みずば。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_07_bird_bath.png',cost:200,icon:'🐦'},
+ {id:'decor8',name:'ピクニックセット',description:'おいしい たべものが いっぱいの セット。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_08_picnic_set.png',cost:250,icon:'🧺'},
+ {id:'decor9',name:'ほしぞら ぼうえんきょう',description:'ほしぞらを ながめる とくべつな ぼうえんきょう。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_09_telescope.png',cost:280,icon:'🔭'},
+ {id:'decor10',name:'ひみつの たからばこ',description:'ひみつの おたからが つまった ごうかな たからばこ。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_10_treasure_chest.png',cost:300,icon:'💎'},
+ {id:'decor11',name:'ことばの クリスタル',description:'ことばの ちからが やどる まほうの クリスタル。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_11_word_crystal.png',cost:400,icon:'🔮'},
+ {id:'decor12',name:'にじの ほうせきとう',description:'にじいろの ひかりを はなつ さいこうきゅうの かざり。',image:'https://mrs-shrimp.github.io/2kokugo/image/camp/decor_12_rainbow_gem_tower.png',cost:500,icon:'🌈'}
+];
+
 const CAMP_BACKGROUNDS = [
  {id:'bg1',name:'ことばの もり',description:'はじめから つかえる、みどりの もり。',image:'https://mrs-shrimp.github.io/2kokugo/image/bg1.png',cost:0,icon:'🌳',theme:'forest'},
  {id:'bg2',name:'みずうみの ほとり',description:'みずべで ゆったり たんけんしよう。',image:'https://mrs-shrimp.github.io/2kokugo/image/bg2.png',cost:120,icon:'🏞️',theme:'lake'},
@@ -421,7 +448,7 @@ const HIRAGANA_SUGGESTIONS = {'分類':'なかま分け','選択':'えらぶ','�
 const STATIC_TEXTS = [
  'ことばハンター','ことばを あつめて、ことばの たんけんに でかけよう！','なまえ','ひらがなで なまえを いれてね','ぼうけんを はじめる','ホーム','ホームへ','もどる','せってい','なかまのもり','はんたいさん','ことばのいずみ','オノマトペどうくつ','ことばのそうげん','ぼうけんモード','れんしゅうモード','にがてこくふくモード','ことばずかん','がくしゅうきろく','せいかい！','おしい！','ヒントをみる','もういちど','こたえをみる','つぎの もんだい','おつかれさま！','ほぞんする','なまえを かえる','おと','うごきを すくなくする','リセット','チェックする','もじチェック','ハンターカード','レベル','けいけんち','プレイかいすう','クリアした エリア','つぎの レベルまで','あつめた しょうごう','きょうは なにを する？','ぼうけんを つづける','ぼうけんへ','れんしゅうする','にがてを みる','ハンターの きろく','どの エリアへ いく？','1かい 10もん。じかんは きにせず かんがえよう。','せいかい！ ことばを ひとつ ゲット！','おしい！ もういちど かんがえよう','ヒントだよ','おつかれさま！','たんけんの けっか','ふくしゅうしよう','まだ であっていない','であった','さいしょに せいかい','ぜんぶ','しぼりこみ','さいきんの ぼうけん','この ことばの はんたいは？','ことばを ひとつ おして、あう はこを おしてね。','それいがい','ほかの なかま','なかまでは ない','いいね！ ひとつ わけられたよ。','おっと、ちがう はこみたい。ことばを よくみて、もういちど やってみよう。','ぜんぶ わけられたよ！','エリアで しぼる','きろくで しぼる','こたえた かいすう','せいかい','ふくしゅう','なまえを おしえてね','もうすこし！','クリア！','けっかを みよう','こたえを みる','リセット','ON','OFF','おみせ','コイン','コインを ためよう','ことばの はっけん','であった ことば','ハンターの キャンプ','キャンプを かざろう','そうびする','はずす','かう','そうびちゅう','コインが たりないよ','ホームへ もどる','ことばの たから','おみせへ','ずかんを みる','はいけいと テントの おみせ','5つの はいけい','5つの テント','せかいを えらぼう','レベルアップで ひろがる','はいけいは かうと すぐに きりかえられるよ','はいけい：','テント：','いまの はいけい','いまの テント','せっていちゅう','この はいけいに する','この テントに する','レベル で かえる','はじめから','コインで かえる もの'
 ];
-const DEFAULT_STATE = () => ({version:SAVE_VERSION,playerName:'',xp:0,level:1,coins:0,coinAwardedQuestionIds:[],ownedShopItems:[],equippedShopItems:{},ownedBackgrounds:['bg1'],ownedTents:['tent1'],equippedBackground:'bg1',equippedTent:'tent1',earnedTitles:[],clearedAreas:[],clearedMissions:[],seenQuestionIds:[],xpAwardedQuestionIds:[],questionStats:{},wordStats:{},answerHistory:[],sessions:[],playCount:0,soundOn:false,reduceMotion:false,activeSession:null,lastScreen:'home'});
+const DEFAULT_STATE = () => ({version:SAVE_VERSION,playerName:'',xp:0,level:1,coins:0,coinAwardedQuestionIds:[],ownedShopItems:[],equippedShopItems:{},ownedBackgrounds:['bg1'],ownedTents:['tent1'],equippedBackground:'bg1',equippedTent:'tent1',ownedCampDecor:[],campDecorSlots:{},earnedTitles:[],clearedAreas:[],clearedMissions:[],seenQuestionIds:[],xpAwardedQuestionIds:[],questionStats:{},wordStats:{},answerHistory:[],sessions:[],playCount:0,soundOn:false,reduceMotion:false,activeSession:null,lastScreen:'home'});
 let appState = null;
 let page = 'welcome';
 let selectedMode = 'practice';
@@ -429,6 +456,7 @@ let selectedArea = 'forest';
 let dictionaryFilter = 'all';
 let auditResult = null;
 let storageWarning = '';
+let pendingDecorId = '';
 let newlyEarnedXP = 0;
 let lastLevel = 1;
 let feedbackTimer = null;
@@ -471,6 +499,13 @@ function safeLoad(){
   const loadedLevel=getLevelFromXP(merged.xp);
   const restoredTent=CAMP_TENTS.find(x=>x.id===merged.equippedTent&&merged.ownedTents.includes(x.id)&&x.level<=loadedLevel);
   merged.equippedTent=restoredTent?restoredTent.id:'tent1';
+  if(!Array.isArray(merged.ownedCampDecor))merged.ownedCampDecor=[];
+  merged.ownedCampDecor=[...new Set(merged.ownedCampDecor.filter(id=>CAMP_DECOR.some(x=>x.id===id)))];
+  if(!merged.campDecorSlots||typeof merged.campDecorSlots!=='object'||Array.isArray(merged.campDecorSlots))merged.campDecorSlots={};
+  for(const slot of ['leftEdge','leftNear','rightNear','rightEdge']){
+   const id=merged.campDecorSlots[slot];
+   if(!CAMP_DECOR.some(x=>x.id===id)||!merged.ownedCampDecor.includes(id))delete merged.campDecorSlots[slot];
+  }
   merged.answerHistory=merged.answerHistory.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).slice(-1200);
   merged.sessions=merged.sessions.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).slice(-300);
   for(const k of ['questionStats','wordStats']) if(!merged[k]||typeof merged[k]!=='object'||Array.isArray(merged[k])) merged[k]={};
@@ -579,10 +614,41 @@ function renderHome(){return `${showNotice()}${homeHero(`<div style="margin-top:
 function renderAreas(){const adventure=selectedMode==='adventure';const unlockCount=1+Math.max(-1,...AREA_INFO.map((a,i)=>appState.clearedAreas.includes(a.id)?i: -1));return `<section class="panel"><div class="panel-head"><div><div class="section-label">${adventure?'ぼうけんモード':'れんしゅうモード'}</div><h1 class="screen-title">どの エリアへ いく？</h1><p class="muted">1かい 10もん。じかんは きにせず かんがえよう。エリアごとの ことばの はっけんかずも みられるよ。</p></div><button class="soft-btn" data-action="home">ホームへ</button></div><div class="area-grid">${AREA_INFO.map((a,i)=>{const locked=adventure&&i>unlockCount;const done=appState.clearedAreas.includes(a.id);const count=QUESTIONS.filter(q=>q.area===a.id).length;const vocab=AREA_WORDS[a.id]||[];const met=encounteredWordsInArea(a.id).size;return `<button class="area-card ${locked?'locked':''}" data-action="selectArea" data-area="${a.id}" ${locked?'disabled':''}><span class="area-icon" style="background:${a.color}">${a.icon}</span><span class="area-info"><strong>${esc(a.name)}</strong><small>${esc(a.desc)}</small><small class="area-word-count">であった ことば：${met}/${vocab.length}</small></span><span class="area-state">${locked?'まだ':done?'クリア！':`${count}もん`}</span></button>`;}).join('')}</div>${adventure&&unlockCount<4?'<div class="notice">つぎの エリアは、まえの エリアを クリアすると あくよ。</div>':''}</section>`;}
 function getCampBackground(id){return CAMP_BACKGROUNDS.find(item=>item.id===id)||CAMP_BACKGROUNDS[0];}
 function getCampTent(id){return CAMP_TENTS.find(item=>item.id===id)||CAMP_TENTS[0];}
+function renderCampDecorSlots(){
+ const positions=[
+  {id:'leftEdge',label:'左はじ',cls:'decor-left-edge'},
+  {id:'leftNear',label:'左どなり',cls:'decor-left-near'},
+  {id:'rightNear',label:'右どなり',cls:'decor-right-near'},
+  {id:'rightEdge',label:'右はじ',cls:'decor-right-edge'}
+ ];
+ return positions.map(pos=>{
+  const item=CAMP_DECOR.find(x=>x.id===(appState.campDecorSlots||{})[pos.id]);
+  if(!item)return `<div class="camp-decor-slot ${pos.cls}" aria-label="${pos.label}（空き）"></div>`;
+  return `<div class="camp-decor-slot ${pos.cls}" title="${esc(pos.label)}：${esc(item.name)}"><img src="${esc(item.image)}" alt="${esc(item.name)}" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>${item.icon}</span><small>${esc(pos.label)}</small><button type="button" data-action="removeCampDecor" data-slot="${pos.id}" aria-label="${esc(pos.label)}の飾りをはずす">×</button></div>`;
+ }).join('');
+}
+function renderCampDecorCard(item){
+ const owned=(appState.ownedCampDecor||[]).includes(item.id);
+ const slots=Object.values(appState.campDecorSlots||{});
+ const placed=slots.includes(item.id);
+ const coins=Math.max(0,Number(appState.coins)||0);
+ const enough=coins>=item.cost;
+ const button=owned
+  ? `<button class="${pendingDecorId===item.id?'soft-btn':'secondary'}" data-action="chooseCampDecor" data-decor="${item.id}">${pendingDecorId===item.id?'場所を えらんでね':placed?'もういちど かざる':'かざる'}</button>`
+  : `<button class="primary" data-action="buyCampDecor" data-decor="${item.id}" ${enough?'':'disabled'}>${enough?`🪙 ${item.cost} コインで かう`:`あと ${item.cost-coins} コイン`}</button>`;
+ return `<article class="shop-item camp-shop-item camp-decor-card"><div class="camp-shop-visual decor-visual"><img src="${esc(item.image)}" alt="" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true"><span class="camp-shop-fallback">${item.icon}</span></div><div class="shop-item-name">${esc(item.name)}</div><div class="shop-item-desc">${esc(item.description)}</div><div class="shop-item-price"><span class="shop-price-pill">🪙 ${item.cost} コイン</span><span class="shop-status">${owned?(placed?'キャンプに かざっているよ':'もっているよ'):'コインで かえるよ'}</span></div>${button}</article>`;
+}
+function renderDecorPlacement(){
+ if(!pendingDecorId)return '';
+ const item=CAMP_DECOR.find(x=>x.id===pendingDecorId);
+ if(!item||(appState.ownedCampDecor||[]).indexOf(item.id)<0)return '';
+ const choices=[['rightEdge','テントの右はじ'],['rightNear','右どなり'],['leftNear','左どなり'],['leftEdge','左はじ']];
+ return `<section class="panel decor-placement"><div class="panel-head"><div><div class="section-label">キャンプを かざろう</div><h2>どこに かざる？</h2><p class="muted">${esc(item.name)}を おく ばしょを えらんでね。うえかえも できるよ。</p></div><button class="soft-btn" data-action="cancelDecorPlacement">やめる</button></div><div class="button-row">${choices.map(([slot,label])=>`<button class="secondary" data-action="placeCampDecor" data-slot="${slot}" data-decor="${item.id}">${label}</button>`).join('')}</div></section>`;
+}
 function renderCampPreview(onShopPage=false){
  const background=getCampBackground(appState.equippedBackground);
  const tent=getCampTent(appState.equippedTent);
- return `<section class="panel camp-panel"><div class="panel-head"><div><div class="section-label">じぶんだけの ばしょ</div><h2>ハンターの キャンプ</h2><p class="muted">はいけいと テントを えらんで、じぶんだけの キャンプに しよう。</p></div><button class="soft-btn" data-action="${onShopPage?'home':'shop'}">${onShopPage?'ホームへ':'おみせへ　🪙'}</button></div><div class="camp-stage camp-stage-scenic" data-background="${background.id}" aria-label="${esc(background.name)}、${esc(tent.name)}を そうびした キャンプ"><img class="camp-background-image" src="${esc(background.image)}" alt="" aria-hidden="true" loading="lazy" onerror="this.hidden=true"><div class="camp-stage-shade" aria-hidden="true"></div><div class="camp-scene-tags"><span class="camp-scene-tag">${esc(background.icon)} ${esc(background.name)}</span><span class="camp-scene-tag tent-tag">⛺ ${esc(tent.name)}</span></div><span class="camp-scene-sparkle" aria-hidden="true">✦</span><span class="camp-scene-sparkle second" aria-hidden="true">✧</span><div class="camp-main-tent-wrap"><img class="camp-main-tent-image" src="${esc(tent.image)}" alt="${esc(tent.name)}" loading="lazy" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="camp-tent-fallback" aria-hidden="true">${tent.icon}</span></div><div class="camp-scene-bottom"><span>はいけい：${esc(background.name)}</span><span>テント：${esc(tent.name)}</span></div></div><div class="camp-current-note"><span>いまの はいけい</span><strong>${esc(background.name)}</strong><span class="camp-note-dot">・</span><span>いまの テント</span><strong>${esc(tent.name)}</strong></div></section>`;
+ return `<section class="panel camp-panel"><div class="panel-head"><div><div class="section-label">じぶんだけの ばしょ</div><h2>ハンターの キャンプ</h2><p class="muted">はいけいと テントを えらんで、じぶんだけの キャンプに しよう。</p></div><button class="soft-btn" data-action="${onShopPage?'home':'shop'}">${onShopPage?'ホームへ':'おみせへ　🪙'}</button></div><div class="camp-stage camp-stage-scenic" data-background="${background.id}" aria-label="${esc(background.name)}、${esc(tent.name)}を そうびした キャンプ"><img class="camp-background-image" src="${esc(background.image)}" alt="" aria-hidden="true" loading="lazy" onerror="this.hidden=true"><div class="camp-stage-shade" aria-hidden="true"></div><div class="camp-scene-tags"><span class="camp-scene-tag">${esc(background.icon)} ${esc(background.name)}</span><span class="camp-scene-tag tent-tag">⛺ ${esc(tent.name)}</span></div><span class="camp-scene-sparkle" aria-hidden="true">✦</span><span class="camp-scene-sparkle second" aria-hidden="true">✧</span>${renderCampDecorSlots()}<div class="camp-main-tent-wrap"><img class="camp-main-tent-image" src="${esc(tent.image)}" alt="${esc(tent.name)}" loading="lazy" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="camp-tent-fallback" aria-hidden="true">${tent.icon}</span></div><div class="camp-scene-bottom"><span>はいけい：${esc(background.name)}</span><span>テント：${esc(tent.name)}</span></div></div><div class="camp-current-note"><span>いまの はいけい</span><strong>${esc(background.name)}</strong><span class="camp-note-dot">・</span><span>いまの テント</span><strong>${esc(tent.name)}</strong></div></section>`;
 }
 function renderBackgroundCard(background){
  const coins=Math.max(0,Number(appState.coins)||0);
@@ -610,7 +676,7 @@ function renderTentCard(tent){
 }
 function renderShop(){
  const coins=Math.max(0,Number(appState.coins)||0);
- return `${showNotice()}<section class="panel"><div class="panel-head"><div><div class="section-label">キャンプを そだてよう</div><h1 class="screen-title">はいけいと テントの おみせ</h1><p class="muted">ことばを まなんで コインを ため、すきな けしきを えらぼう。</p></div><button class="soft-btn" data-action="home">ホームへ</button></div><div class="shop-intro"><div><div style="font-weight:950;font-size:18px">🪙 いまの コイン</div><div class="muted">はじめての せいかいで 3コイン、ヒントや もういちどの あとは 1コイン。1もんから コインが もらえるのは 1かいだけ。10もんのうち 6もん せいかいすると、クリアボーナス 30コイン！</div></div><div class="coin-wallet"><span aria-hidden="true">🪙</span><strong>${coins}</strong><small>コイン</small></div></div></section>${renderCampPreview(true)}<section class="panel camp-shop-section"><div class="panel-head"><div><div class="section-label">せかいを えらぼう</div><h2>5つの はいけい</h2><p class="muted">たかい はいけいほど、たくさんの コインが ひつようだよ。</p></div></div><div class="shop-grid camp-shop-grid">${CAMP_BACKGROUNDS.map(renderBackgroundCard).join('')}</div></section><section class="panel camp-shop-section"><div class="panel-head"><div><div class="section-label">レベルアップで ひろがる</div><h2>5つの テント</h2><p class="muted">レベルが あがると、あたらしい テントが かえるようになるよ。</p></div><span class="area-state">いまの レベル：${appState.level}</span></div><div class="shop-grid camp-shop-grid">${CAMP_TENTS.map(renderTentCard).join('')}</div></section><section class="panel"><div class="button-row"><button class="soft-btn" data-action="dictionary">ことばずかんを みる</button><button class="soft-btn" data-action="history">がくしゅうきろく</button></div></section>`;
+ return `${showNotice()}<section class="panel"><div class="panel-head"><div><div class="section-label">キャンプを そだてよう</div><h1 class="screen-title">はいけいと テントの おみせ</h1><p class="muted">ことばを まなんで コインを ため、すきな けしきを えらぼう。</p></div><button class="soft-btn" data-action="home">ホームへ</button></div><div class="shop-intro"><div><div style="font-weight:950;font-size:18px">🪙 いまの コイン</div><div class="muted">はじめての せいかいで 3コイン、ヒントや もういちどの あとは 1コイン。1もんから コインが もらえるのは 1かいだけ。10もんのうち 6もん せいかいすると、クリアボーナス 30コイン！</div></div><div class="coin-wallet"><span aria-hidden="true">🪙</span><strong>${coins}</strong><small>コイン</small></div></div></section>${renderCampPreview(true)}<section class="panel camp-shop-section"><div class="panel-head"><div><div class="section-label">せかいを えらぼう</div><h2>5つの はいけい</h2><p class="muted">たかい はいけいほど、たくさんの コインが ひつようだよ。</p></div></div><div class="shop-grid camp-shop-grid">${CAMP_BACKGROUNDS.map(renderBackgroundCard).join('')}</div></section><section class="panel camp-shop-section"><div class="panel-head"><div><div class="section-label">レベルアップで ひろがる</div><h2>5つの テント</h2><p class="muted">レベルが あがると、あたらしい テントが かえるようになるよ。</p></div><span class="area-state">いまの レベル：${appState.level}</span></div><div class="shop-grid camp-shop-grid">${CAMP_TENTS.map(renderTentCard).join('')}</div></section>${renderDecorPlacement()}<section class="panel camp-shop-section"><div class="panel-head"><div><div class="section-label">キャンプを もっと たのしく</div><h2>キャンプの かざり</h2><p class="muted">かざりを かうと、テントの 左右に 4つまで おけるよ。</p></div></div><div class="shop-grid camp-shop-grid">${CAMP_DECOR.map(renderCampDecorCard).join('')}</div></section><section class="panel"><div class="button-row"><button class="soft-btn" data-action="dictionary">ことばずかんを みる</button><button class="soft-btn" data-action="history">がくしゅうきろく</button></div></section>`;
 }
 function chooseQuestions(area,mode){let pool=QUESTIONS.filter(q=>q.area===area&&validQuestionIds.has(q.id));if(pool.length<10)pool=QUESTIONS.filter(q=>validQuestionIds.has(q.id));const stats=appState.questionStats||{};const score=q=>{const s=stats[q.id]||{};const seen=Number(s.seen)||0;const wrong=Number(s.wrong)||0;const solved=Number(s.solved)||0;const due=s.reviewNeeded?15:0;const recency=s.lastSeen?Math.max(0,14-(Date.now()-new Date(s.lastSeen).getTime())/86400000):5;const levelFit=(q.difficulty<=appState.level?3:0);return due+wrong*3-solved*.55-seen*.65-recency*.25+levelFit+Math.random()*3;};return pool.slice().sort((a,b)=>score(b)-score(a)).slice(0,10).map(q=>q.id);}
 function chooseWeakQuestions(){const stats=appState.questionStats||{};const all=QUESTIONS.filter(q=>validQuestionIds.has(q.id));const priority=q=>{const s=stats[q.id]||{};const wrong=Number(s.wrong)||0;const attempts=Number(s.attempts)||0;const solved=Number(s.solved)||0;const days=s.lastWrong?(Date.now()-new Date(s.lastWrong).getTime())/86400000:30;return (s.reviewNeeded?100:0)+wrong*7+Math.max(0,5-days*.2)+Math.max(0,attempts-solved)*2+Math.random()*1.5;};const failed=all.filter(q=>{const s=stats[q.id]||{};return s.reviewNeeded||(Number(s.wrong)||0)>(Number(s.solved)||0);}).sort((a,b)=>priority(b)-priority(a));let chosen=[];const addQ=q=>{if(q&&!chosen.includes(q.id)&&chosen.length<10)chosen.push(q.id);};
@@ -752,6 +818,31 @@ function handleAction(action,el){
   if(item&&isShopItemOwned(item.id)&&isShopItemEquipped(item)){delete appState.equippedShopItems[item.slot];saveState();render();}
   return;
  }
+ if(action==='buyCampDecor'){
+  const item=CAMP_DECOR.find(x=>x.id===el.dataset.decor);
+  if(!item||(appState.ownedCampDecor||[]).includes(item.id))return;
+  if((Number(appState.coins)||0)<item.cost){storageWarning='コインが たりないよ。もんだいに せいかいして ためよう。';render();return;}
+  appState.coins=Math.max(0,Math.floor(Number(appState.coins)||0)-item.cost);
+  appState.ownedCampDecor.push(item.id);pendingDecorId=item.id;storageWarning='';saveState();render();return;
+ }
+ if(action==='chooseCampDecor'){
+  const id=el.dataset.decor;
+  if((appState.ownedCampDecor||[]).includes(id)){pendingDecorId=id;render();}
+  return;
+ }
+ if(action==='placeCampDecor'){
+  const item=CAMP_DECOR.find(x=>x.id===el.dataset.decor);
+  const slot=el.dataset.slot;
+  if(!item||(appState.ownedCampDecor||[]).indexOf(item.id)<0||!['leftEdge','leftNear','rightNear','rightEdge'].includes(slot))return;
+  if(!appState.campDecorSlots||typeof appState.campDecorSlots!=='object')appState.campDecorSlots={};
+  appState.campDecorSlots[slot]=item.id;pendingDecorId='';storageWarning='';saveState();render();return;
+ }
+ if(action==='removeCampDecor'){
+  const slot=el.dataset.slot;
+  if(appState.campDecorSlots&&['leftEdge','leftNear','rightNear','rightEdge'].includes(slot)){delete appState.campDecorSlots[slot];saveState();render();}
+  return;
+ }
+ if(action==='cancelDecorPlacement'){pendingDecorId='';render();return;}
  if(action==='adventure'){selectedMode='adventure';setPage('areas');return;}
  if(action==='practice'){selectedMode='practice';setPage('areas');return;}
  if(action==='selectArea'){const area=el.dataset.area;const idx=AREA_INFO.findIndex(a=>a.id===area);const unlockCount=1+Math.max(-1,...AREA_INFO.map((a,i)=>appState.clearedAreas.includes(a.id)?i:-1));if(selectedMode==='adventure'&&idx>unlockCount)return;selectedArea=area;startGame(selectedMode,area);return;}
