@@ -53,7 +53,7 @@ const today=()=>new Date().toISOString().slice(0,10),need=()=>S.lv*60;
 const TT=['みならい','かんじ ひろいびと','かんじ たんけんか','もじ ぼうけんか','かんじ きし','かんじ はかせ','かんじ たつじん','かんじ でんせつ'];
 const title=()=>TT[Math.min(TT.length-1,(S.lv-1)>>1)];
 let ac;function snd(f,d=.12){if(!S.set.snd)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.07;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
-const PET_IMAGE_BASE='https://mrs-shrimp.github.io/2kokugo/image/pet/';
+const PET_IMAGE_BASE='https://mrs-shrimp.github.io/2kokugo/image/pets/';
 const petImage=(petIndex,stage,sizeClass='pet-img')=>{
  const p=PETS[petIndex]||PETS[0],n=Math.max(1,Math.min(4,stage)),src=PET_IMAGE_BASE+p.slug+'/stage'+n+'.png';
  const fallback=p.s[n-1]||p.s[0];
