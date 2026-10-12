@@ -26,7 +26,7 @@ body{background:radial-gradient(circle at 15% 0,#ffe0a0,transparent 45%),radial-
 button{background:linear-gradient(#ff9a62,#ff6a2c);border-radius:20px;text-shadow:0 2px 0 rgba(0,0,0,.2)}
 button.g{background:linear-gradient(#58d68d,#27ae60)}button.b{background:linear-gradient(#7ea2ff,#4a6fe6)}button.r{background:linear-gradient(#ff7b7f,#e23b44)}button.n{background:var(--l);text-shadow:none}
 .hero{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#7b61ff,#ff7ac3);color:#fff;border-radius:24px;padding:12px 14px;box-shadow:0 6px 0 rgba(0,0,0,.18);margin-bottom:8px}
-.av{font-size:56px;animation:fl 2.4s ease-in-out infinite}@keyframes fl{50%{transform:translateY(-8px) rotate(6deg)}}
+.av{font-size:56px;animation:fl 2.4s ease-in-out infinite}.pet-img{width:1.25em;height:1.25em;object-fit:contain;vertical-align:middle}.pet-fallback{display:none}@keyframes fl{50%{transform:translateY(-8px) rotate(6deg)}}
 .mb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 6px;font-size:17px}.mb span{font-size:40px;animation:fl 3s ease-in-out infinite}
 .pt{position:fixed;pointer-events:none;font-size:30px;animation:up 1s ease-out forwards;z-index:9}@keyframes up{to{transform:translate(var(--x),-170px) rotate(360deg);opacity:0}}
 .shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
@@ -53,7 +53,13 @@ const today=()=>new Date().toISOString().slice(0,10),need=()=>S.lv*60;
 const TT=['みならい','かんじ ひろいびと','かんじ たんけんか','もじ ぼうけんか','かんじ きし','かんじ はかせ','かんじ たつじん','かんじ でんせつ'];
 const title=()=>TT[Math.min(TT.length-1,(S.lv-1)>>1)];
 let ac;function snd(f,d=.12){if(!S.set.snd)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.07;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
-const pface=st=>{const p=PETS[S.pet]||PETS[0];return p.s[Math.min(p.s.length-1,Math.floor(st/2))]};
+const PET_IMAGE_BASE='https://mrs-shrimp.github.io/2kokugo/image/pet/';
+const petImage=(petIndex,stage,sizeClass='pet-img')=>{
+ const p=PETS[petIndex]||PETS[0],n=Math.max(1,Math.min(4,stage)),src=PET_IMAGE_BASE+p.slug+'/stage'+n+'.png';
+ const fallback=p.s[n-1]||p.s[0];
+ return `<img class="${sizeClass}" src="${src}" alt="${p.n}" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"><span class="pet-fallback">${fallback}</span>`;
+};
+const pface=st=>petImage(S.pet,Math.floor(Math.max(0,Math.min(7,st))/2)+1);
 const cur=()=>pface(Math.min(7,(S.lv-1)>>1));
 const AV=new Proxy([],{get:(t,k)=>k=='length'?8:(typeof k=='string'?pface(+k):undefined)});
 function burst(e,n){for(let i=0;i<n;i++){const s=document.createElement('span');s.className='pt';s.textContent=e;s.style.left=(15+Math.random()*70)+'vw';s.style.top=(35+Math.random()*25)+'vh';s.style.setProperty('--x',(Math.random()*180-90)+'px');document.body.appendChild(s);setTimeout(()=>s.remove(),1000)}}
@@ -151,10 +157,10 @@ ${shop()}<div class="card"><b>きせかえ</b><div class="grid" style="margin-to
 function feed(){if(S.food<1)return toast('おにぎりが ないよ。もんだいを 10もん せいかいすると 1こ ゲット！');S.food--;S.bond++;save();burst('❤️',8);snd(880);pet(YUM[Math.floor(Math.random()*YUM.length)])}
 function wear(v){S.acc=S.acc==v?'':v;save();pet()}
 function tap(){burst('✨',4);snd(520,.08);$('pm').textContent=TALK[Math.floor(Math.random()*TALK.length)]}
-const PETS=[{n:'ひよこ',c:0,s:['🥚','🐣','🐥','🐔']},{n:'ねこ',c:30,s:['🥚','🐱','😺','🦁']},{n:'いぬ',c:30,s:['🥚','🐶','🐕','🐺']},{n:'ペンギン',c:60,s:['🥚','🐧','🐦','🦅']},{n:'パンダ',c:80,s:['🥚','🐼','🐻','🐻‍❄️']},{n:'ロボ',c:120,s:['🔩','🤖','🦾','🛸']},{n:'りゅう',c:150,s:['🥚','🦎','🐊','🐲']},{n:'ユニコーン',c:200,s:['🥚','🐴','🐎','🦄']}];
+const PETS=[{n:'ひよこ',slug:'chick',c:0,s:['🥚','🐣','🐥','🐔']},{n:'ねこ',slug:'cat',c:30,s:['🥚','🐱','😺','🦁']},{n:'いぬ',slug:'dog',c:30,s:['🥚','🐶','🐕','🐺']},{n:'ペンギン',slug:'penguin',c:60,s:['🥚','🐧','🐦','🦅']},{n:'パンダ',slug:'panda',c:80,s:['🥚','🐼','🐻','🐻‍❄️']},{n:'ロボ',slug:'robot',c:120,s:['🔩','🤖','🦾','🛸']},{n:'りゅう',slug:'dragon',c:150,s:['🥚','🦎','🐊','🐲']},{n:'ユニコーン',slug:'unicorn',c:200,s:['🥚','🐴','🐎','🦄']}];
 const bub=t=>`<div class="bub"><span class="bf">${cur()}</span><div>${t}</div></div>`;
 function homeBub(){const ks=S.wrong.length?S.wrong:Object.keys(S.items).filter(s=>S.items[s].ng>0);if(!ks.length)return '';const key=ks[Math.floor(Math.random()*Math.min(3,ks.length))],k=K[parseInt(key)],t=key.slice(-1);const tx=t=='w'?`「${k.r}」は 「${k.w}」と かくよ`:`「${k.k}」の よみは「${k.t}」だよ (${k.w} = ${k.r})`;return `<div class="bub"><span class="bf">${cur()}</span><div>にがてな かんじ みつけた！<br><b>${tx}</b><br><button class="n" data-a="go" data-v="e" style="margin-top:6px;padding:8px 12px">れんしゅうする</button></div></div>`}
-function shop(){const st=Math.min(7,(S.lv-1)>>1);return `<div class="card"><b>ペットショップ</b> <small>🪙 ${S.coin}</small><div class="grid" style="margin-top:8px">${PETS.map((p,i)=>{const own=S.own.includes(i),f=p.s[Math.min(p.s.length-1,Math.floor(st/2))];return own?`<button class="${S.pet==i?'g':'n'}" data-a="sel" data-v="${i}"><span style="font-size:34px">${f}</span><br>${p.n}<br><small>${S.pet==i?'いっしょに いるよ':'つれていく'}</small></button>`:`<button class="n" data-a="buy" data-v="${i}" ${S.coin<p.c?'style="opacity:.55"':''}><span style="font-size:34px">${p.s[1]}</span><br>${p.n}<br><small>🪙 ${p.c}</small></button>`}).join('')}</div><small>コインは せいかいすると もらえるよ</small></div>`}
+function shop(){const st=Math.min(7,(S.lv-1)>>1);return `<div class="card"><b>ペットショップ</b> <small>🪙 ${S.coin}</small><div class="grid" style="margin-top:8px">${PETS.map((p,i)=>{const own=S.own.includes(i),stage=Math.floor(st/2)+1;return own?`<button class="${S.pet==i?'g':'n'}" data-a="sel" data-v="${i}"><span style="font-size:34px">${petImage(i,stage)}</span><br>${p.n}<br><small>${S.pet==i?'いっしょに いるよ':'つれていく'}</small></button>`:`<button class="n" data-a="buy" data-v="${i}" ${S.coin<p.c?'style="opacity:.55"':''}><span style="font-size:34px">${petImage(i,2)}</span><br>${p.n}<br><small>🪙 ${p.c}</small></button>`}).join('')}</div><small>コインは せいかいすると もらえるよ</small></div>`}
 function sel(v){S.pet=+v;save();pet()}
 function buy(v){v=+v;const p=PETS[v];if(S.coin<p.c)return toast(`コインが たりないよ (あと ${p.c-S.coin})`);if(!confirm(`${p.n}を ${p.c}コインで かう？`))return;S.coin-=p.c;S.own.push(v);S.pet=v;save();burst('🎉',12);snd(880);pet(`${p.n}が なかまに なったよ！`)}
 function sett(){app.innerHTML=`<div class="top"><button class="n" data-a="home">◀</button><b>せってい</b></div>
