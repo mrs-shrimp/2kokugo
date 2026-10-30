@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>主語と述語を見つけよう</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#fff;color:#26364a}
+body{font-family:"Yu Gothic","Meiryo",sans-serif;font-weight:700}
+#app{max-width:1100px;margin:auto;padding:22px}
+.intro{background:#f1f7ff;border:2px solid #dceaff;border-radius:18px;padding:22px;text-align:center;margin-bottom:18px}
+h1{font-size:clamp(30px,4.5vw,42px);color:#315f9e;margin:0 0 12px}
+.ask{font-size:clamp(34px,4.8vw,46px);color:#284f82;margin:10px}
+.sent{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;background:#f7faff;border:2px solid #dbe8f8;border-radius:18px;padding:24px}
+.w{font:inherit;font-size:clamp(42px,5.8vw,60px);min-height:110px;padding:24px 28px;border:2px solid #b9cce4;border-radius:16px;background:white;color:#26364a;cursor:pointer;box-shadow:0 3px 0 #dbe5f1}
+.w:disabled{opacity:1;cursor:default}
+.w.correct-subject{background:#fff0d8;border:3px solid #f39a27;color:#9b4c08;box-shadow:0 0 0 5px #ffe1b3,0 0 30px 8px #ffbd59;animation:pop .45s}
+.w.correct-predicate{background:#e5f2ff;border:3px solid #438fe0;color:#175b9f;box-shadow:0 0 0 5px #c9e3ff,0 0 30px 8px #79baff;animation:pop .45s}
+.w.wrong{background:#fff0ed;border-color:#ed8b7d;animation:shake .3s}
+@keyframes pop{50%{transform:scale(1.08)}}@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.feedback{margin:20px 0;padding:24px;border-radius:16px;font-size:clamp(24px,3.2vw,32px);line-height:1.9}
+.feedback.ok{background:#eaf9f0;border:2px solid #8dd5ad;color:#205c40}.feedback.ng{background:#fff7e9;border:2px solid #f1cc7b;color:#674c1c}
+.feedback em{display:block;font-style:normal;margin-top:8px;color:#53657a;font-size:.9em}
+.actions{text-align:center;margin:20px}.next{font:inherit;font-size:28px;padding:18px 38px;background:#269b68;color:white;border:0;border-radius:14px;cursor:pointer;box-shadow:0 4px 0 #18744f}
+.note{text-align:center;color:#65758b;margin-top:12px;font-size:clamp(18px,2.2vw,23px)}
+</style></head><body><main id="app"></main><script>
+const RAW={1:[
+"ねこが:s ねる。:p","いぬが:s ほえる。:p","鳥[とり]が:s とぶ。:p","花[はな]が:s さく。:p","雨[あめ]が:s ふる。:p","先生[せんせい]が:s 来[く]る。:p","赤[あか]ちゃんが:s なく。:p","でんしゃが:s 走[はし]る。:p","お母[かあ]さんが:s よぶ。:p","ドアが:s しまる。:p"],
+2:["赤[あか]い:m 花[はな]が:s さく。:p","大[おお]きな:m 犬[いぬ]が:s ほえる。:p","ぼくは:s 本[ほん]を:o よむ。:p","ねこが:s えさを:o 食[た]べる。:p","兄[あに]は:s 外[そと]で:w あそぶ。:p","鳥[とり]が:s 木[き]に:w とまる。:p","風[かぜ]が:s 強[つよ]く:h ふく。:p","先生[せんせい]は:s 教室[きょうしつ]に:w 入[はい]る。:p","子[こ]どもが:s 公園[こうえん]で:w あそぶ。:p","空[そら]が:s 青[あお]い。:q"],
+3:["かわいい:m 子[こ]ねこが:s 日[ひ]なたで:w 気[き]もちよく:h ねる。:p","白[しろ]い:m 雲[くも]が:s 空[そら]に:w うかぶ。:p","ぼくは:s 学校[がっこう]で:w 友[とも]だちと:c あそぶ。:p","わたしは:s 家[いえ]で:w えほんを:o よむ。:p","兄[あに]は:s 毎朝[まいあさ]:t 六時[ろくじ]に:t おきる。:p","お母[かあ]さんが:s おいしい:m ごはんを:o 作[つく]る。:p","友[とも]だちは:s 大[おお]きな声[こえ]で:h 名前[なまえ]を:o よぶ。:p","先生[せんせい]は:s 教室[きょうしつ]で:w 大[おお]きな声[こえ]で:h はなす。:p","公園[こうえん]で:w 子[こ]どもたちが:s なかよく:h あそぶ。:p","毎朝[まいあさ]:t ぼくは:s 公園[こうえん]で:w はしる。:p","日[ひ]なたで:w ねこは:s 気[き]もちよく:h ねる。:p","青[あお]い:m 空[そら]を:w 鳥[とり]が:s とぶ。:p","この:m 花[はな]は:s きれいだ。:q","弟[おとうと]は:s 元気[げんき]だ。:q","これは:s りんごだ。:n","ぼくの:m へやは:s 広[ひろ]い。:q"],
+4:["ぼくの:m おとうとは:s 夜[よる]に:t はやく:h ねる。:p","小[ちい]さな:m 鳥[とり]が:s 木[き]の上[うえ]で:w なく。:p","山[やま]の上[うえ]に:w 大[おお]きな:m 月[つき]が:s のぼる。:p","きょうは:t 空[そら]が:s とても:h 青[あお]い。:q","わたしの:m 友[とも]だちは:s とても:h 元気[げんき]だ。:q","これは:s ぼくの:m 本[ほん]だ。:n","休[やす]みの日[ひ]に:t 姉[あね]は:s ピアノを:o ひく。:p","公園[こうえん]で:w 白[しろ]い:m 犬[いぬ]が:s 元気[げんき]に:h はしる。:p","毎朝[まいあさ]:t 兄[あに]は:s 公園[こうえん]を:w はしる。:p","大[おお]きな:m くじらが:s 広[ひろ]い:m 海[うみ]の中[なか]を:w およぐ。:p","白[しろ]い:m 雪[ゆき]が:s しずかな:m 山[やま]に:w つもる。:p","兄[あに]は:s 毎朝[まいあさ]:t 六時[ろくじ]に:t 自分[じぶん]で:h おきる。:p","先生[せんせい]は:s 今日[きょう]の:m 算数[さんすう]の:m もんだいを:o 出[だ]す。:p","わたしの:m 妹[いもうと]は:s 毎朝[まいあさ]:t 元気[げんき]に:h 歩[ある]く。:p","赤[あか]い:m 鳥[とり]が:s 高[たか]い:m 木[き]の上[うえ]で:w なく。:p","先生[せんせい]は:s 朝[あさ]の:m 教室[きょうしつ]で:w 大[おお]きな声[こえ]で:h はなす。:p","夜[よる]の:m 空[そら]に:w 大[おお]きな:m 星[ほし]が:s ひかる。:p","ぼくは:s 休[やす]みの日[ひ]に:t 友[とも]だちと:c 公園[こうえん]で:w あそぶ。:p","お父[とう]さんは:s 毎日[まいにち]:t 車[くるま]で:h 会社[かいしゃ]に:w 行[い]く。:p","小[ちい]さな:m 魚[さかな]が:s 青[あお]い:m 池[いけ]の中[なか]を:w およぐ。:p","かわいい:m 妹[いもうと]が:s 白[しろ]い:m 犬[いぬ]を:o だく。:p","雪[ゆき]の:m 日[ひ]に:t 子[こ]どもたちが:s 外[そと]で:w あそぶ。:p","弟[おとうと]は:s 朝[あさ]の:m 教室[きょうしつ]で:w 本[ほん]を:o よむ。:p","白[しろ]い:m 雲[くも]が:s 青[あお]い:m 空[そら]に:w うかぶ。:p","まるい:m 月[つき]が:s 夜[よる]の:m 山[やま]の上[うえ]に:w のぼる。:p","兄[あに]は:s 毎日[まいにち]:t 学校[がっこう]で:w ピアノを:o ひく。:p","先生[せんせい]が:s 白[しろ]い:m チョークで:h 大[おお]きな字[じ]を:o 書[か]く。:p","小[ちい]さな:m 妹[いもうと]の:m ぼうしは:s とても:h 赤[あか]い。:q","ぼくの:m 学校[がっこう]の:m 門[もん]は:s とても:h 大[おお]きい。:q","あれは:s ぼくの:m 大[おお]きな:m 白[しろ]い:m 家[いえ]だ。:n","毎朝[まいあさ]:t 姉[あね]は:s 近[ちか]くの:m 公園[こうえん]を:w はしる。:p","お父[とう]さんは:s 日曜日[にちようび]に:t 車[くるま]を:o きれいに:h あらう。:p","夏[なつ]の:m 海[うみ]で:w 子[こ]どもたちが:s 元気[げんき]に:h およぐ。:p","お母[かあ]さんが:s 朝早[あさはや]く:t 大[おお]きな:m なべで:h スープを:o 作[つく]る。:p","休[やす]みの日[ひ]に:t 姉[あね]は:s 家[いえ]で:w きれいな:m 花[はな]を:o かざる。:p","小[ちい]さな:m 鳥[とり]が:s 朝[あさ]の:m 青[あお]い:m 空[そら]を:w とぶ。:p","先生[せんせい]は:s 今日[きょう]の:m 国語[こくご]の:m 時間[じかん]に:t 大[おお]きな声[こえ]で:h はなす。:p","ぼくは:s 毎朝[まいあさ]:t 近[ちか]くの:m 公園[こうえん]で:w 犬[いぬ]と:c はしる。:p","ぼくの:m 友[とも]だちは:s 毎朝[まいあさ]:t 六時[ろくじ]に:t 自分[じぶん]で:h おきる。:p","先生[せんせい]が:s 朝[あさ]の:m 教室[きょうしつ]で:w みんなに:c 大[おお]きな声[こえ]で:h 話[はな]す。:p","あの:m 高[たか]い:m 山[やま]の:m 上[うえ]は:s いつも:t 雪[ゆき]だ。:n","秋[あき]の:m 野原[のはら]で:w 赤[あか]い:m とんぼが:s 高[たか]く:h とぶ。:p","夏[なつ]の:m 朝[あさ]に:t 兄[あに]は:s 海[うみ]で:w 大[おお]きく:h およぐ。:p","ぼくの:m 弟[おとうと]は:s 夜[よる]に:t 自分[じぶん]の:m へやで:w ぐっすり:h ねる。:p","兄[あに]は:s 休[やす]みの日[ひ]に:t 友[とも]だちと:c 広[ひろ]い:m 公園[こうえん]で:w サッカーを:o する。:p","大[おお]きな:m 月[つき]が:s 夜[よる]の:m 山[やま]の:m 上[うえ]に:w ゆっくり:h のぼる。:p","白[しろ]い:m 雪[ゆき]が:s 冬[ふゆ]の:m 夜[よる]に:t しずかな:m 町[まち]に:w ふる。:p","赤[あか]い:m ふうせんが:s 子[こ]どもたちの:m 頭[あたま]の:m 上[うえ]を:w ふわふわ:h とぶ。:p","青[あお]い:m 池[いけ]の:m 中[なか]を:w 小[ちい]さな:m 魚[さかな]が:s すいすい:h およぐ。:p","わたしは:s 毎日[まいにち]:t 家[いえ]で:w 小[ちい]さな:m 妹[いもうと]と:c 本[ほん]を:o よむ。:p",
+"あさ:t こうえんで:w 小[ちい]さな:m ねこが:s しずかに:h まるく:m ねる:p",
+"きょう:t 学校[がっこう]の:m 校[こう]ていで:w 子[こ]どもたちが:s 元気[げんき]に:h なかよく:h あそぶ:p",
+"ゆう方:t うちの:m 犬[いぬ]が:s げんかんで:w 大[おお]きく:h 三回[さんかい]:h ほえる:p",
+"はるに:w 庭[にわ]の:m 赤[あか]い:m 花[はな]が:s きれいに:h たくさん:h さく:p",
+"あさ:t 山[やま]の:m 上[うえ]で:w 白[しろ]い:m 鳥[とり]が:s 高く:h とぶ:p",
+"きのう:t 家[いえ]の:m 台所[だいどころ]で:w 母[はは]が:s カレーを:o おいしく:h 作[つく]った:p",
+"毎朝[まいあさ]:t 弟[おとうと]は:s 自分[じぶん]の:m へやで:w 大[おお]きな:m 声[こえ]で:w 歌[うた]う:p",
+"あさ:t 牧場[ぼくじょう]で:w 白[しろ]い:m うしが:s 草[くさ]を:o のんびり:h 食[た]べる:p",
+"夏[なつ]の:m あつい:m 日[ひ]に:t ぼくは:s つめたい:m 水[みず]を:o のむ:p",
+"冬[ふゆ]の:m 朝[あさ]に:t 小鳥[ことり]が:s 木[き]の:m えだで:w 元気[げんき]に:h なく:p",
+"きょう:t 図書室[としょしつ]で:w ゆかりさんが:s 長[なが]い:m 本[ほん]を:o 楽しそうに:h 読[よ]む:p",
+"夕方[ゆうがた]:t 公園[こうえん]の:m すみで:w 子[こ]ねこが:s 小[ちい]さく:h 丸[まる]く:h なっている:p",
+"あさ:t 大[おお]きな:m 池[いけ]で:w かえるが:s 水[みず]の:m 上[うえ]を:w とぶ:p",
+"きのう:t 学校[がっこう]で:w 先生[せんせい]が:s 新[あたら]しい:m 本[ほん]を:o みんなに:w 見[み]せた:p",
+"はるの:m 山[やま]に:w かわいい:m しかが:s ゆっくり:h 道[みち]を:w あるく:p",
+"あさ:t 台所[だいどころ]で:w 母[はは]が:s 白[しろ]い:m お皿[さら]に:w パンを:o ならべる:p",
+"きょう:t 校[こう]ていで:w ぼくは:s 赤[あか]い:m ボールを:o 高く:h なげた:p",
+"ゆう方:t 川[かわ]の:m 近[ちか]くで:w 大[おお]きな:m 魚[さかな]が:s ゆっくり:h およぐ:p",
+"夜[よる]:t 空[そら]に:w たくさんの:m 星[ほし]が:s きらきら:h 明[あか]るく:h かがやく:p",
+"あさ:t うちの:m へやで:w 妹[いもうと]が:s お気に入[い]りの:m 人形[にんぎょう]を:o だいている:p",
+"きょう:t 近[ちか]くの:m 店[みせ]で:w おじいさんが:s 新[あたら]しい:m くつを:o 買[か]った:p",
+"春[はる]の:m あたたかい:m 日[ひ]に:t ちょうが:s 庭[にわ]の:m 花[はな]に:w とまる:p",
+"雨[あめ]の:m 日[ひ]には:t ぼくは:s 家[いえ]で:w 大好きな:m 本[ほん]を:o 読[よ]む:p",
+"毎朝[まいあさ]:t 学校[がっこう]の:m 前[まえ]で:w 見守[みまも]りの:m 人[ひと]が:s 子[こ]どもを:o むかえる:p",
+"あさ:t 山[やま]の:m 道[みち]を:w 元気[げんき]な:m 犬[いぬ]が:s 先に:h 走[はし]る:p",
+"ゆう方:t 家[いえ]の:m 前[まえ]で:w 弟[おとうと]が:s 青い:m 自転車[じてんしゃ]を:o こぐ:p",
+"あさ:t 広[ひろ]い:m 草原[そうげん]を:w 馬[うま]が:s 力強[ちからづよ]く:h まっすぐ:h 走[はし]る:p",
+"毎日[まいにち]:t ぼくは:s 朝[あさ]ごはんに:t 大[おお]きな:m おにぎりを:o 一[ひと]つ:h 食[た]べる:p",
+"あさ:t 木[き]の:m 上[うえ]で:w 小[ちい]さな:m りすが:s 木[き]の実を:o かじる:p",
+"きょう:t 体育館[たいいくかん]で:w 子[こ]どもたちが:s 赤[あか]い:m ボールを:o 元気[げんき]に:h けった:p",
+"冬[ふゆ]の:m 寒[さむ]い:m 朝[あさ]に:t ぼくは:s あたたかい:m ココアを:o のむ:p",
+"夕方[ゆうがた]:t 学校[がっこう]の:m 花[はな]だんで:w ゆかりさんが:s 小[ちい]さな:m 花[はな]を:o 見[み]つけた:p",
+"あさ:t うちの:m 屋根[やね]に:w 黒[くろ]い:m ねこが:s じっと:h すわる:p",
+"きょう:t 図工[ずこう]の:m 時間[じかん]に:t みんなが:s 色[いろ]とりどりの:m 紙[かみ]を:o 切[き]った:p",
+"はるの:m 野原[のはら]で:w 黄色[きいろ]い:m ちょうが:s 花[はな]の:m まわりを:w とびまわる:p",
+"まいばん:t わたしは:s 自分[じぶん]の:m へやで:w お気に入[い]りの:m 本[ほん]を:o 読[よ]む:p"]};
+
+const ALL=[];for(const level in RAW){RAW[level].forEach(rawText=>ALL.push({raw:rawText}));}
+const app=document.getElementById('app');
+const ruby=s=>s.replace(/([一-龠々]+)\[([^\]]+)\]/g,'<ruby>$1<rt>$2</rt></ruby>');
+const parse=s=>s.split(' ').map(part=>{const n=part.lastIndexOf(':');return {text:part.slice(0,n),kind:part.slice(n+1)};});
+const isPredicate=k=>k==='p'||k==='q'||k==='n';
+let current=null,index=-1;
+function explanation(tokens,chosen,mode,correct){
+ const selected=tokens[chosen],subject=tokens.find(t=>t.kind==='s'),predicate=tokens.find(t=>isPredicate(t.kind));
+ const subj='「'+subject.text.replace(/[。]$/,'').replace(/[はが]$/,'')+'」';
+ const pred='「'+predicate.text.replace(/[。]$/,'')+'」';
+ const label='「'+selected.text.replace(/[。]$/,'')+'」';
+ const role={m:'どんな',w:'どこで・どこに',o:'何を',h:'どのように',t:'いつ',c:'だれと'};
+ if(correct&&mode==='s')return `正解！ ${label}は、「だれが・何が」をあらわすことばだよ。これが主語だね。`;
+ if(correct)return `正解！ ${label}は、${subj}がどうするのか・どんなようすなのか・何なのかをあらわすことば。これが述語だよ。`;
+ if(mode==='s'){
+  if(isPredicate(selected.kind))return `${label}は「どうする・どんなだ・何だ」をあらわす述語だよ。主語は「だれが・何が」をあらわすことばだね。<em>この文の主語は ${subj} だよ。</em>`;
+  return `${label}は「${role[selected.kind]||'ほかのこと'}」をあらわすことばだよ。「だれが・何が」ではないので、主語ではないよ。<em>この文の主語は ${subj} だよ。</em>`;
+ }
+ if(selected.kind==='s')return `${label}は「だれが・何が」をあらわす主語だよ。<em>述語は、${subj}がどうするのかをあらわす ${pred} だね。</em>`;
+ return `${label}は「${role[selected.kind]||'ほかのこと'}」をあらわすことばだよ。述語ではないね。<em>この文で、${subj}がどうするのか・どんなようすなのかをあらわすのは ${pred} だよ。</em>`;
+}
+function show(){
+ const t=current.tokens,mode=current.mode;
+ app.innerHTML=ruby(`<section class="intro"><h1>主語と述語を見つけよう！</h1><div class="ask">${mode==='s'?'主語を見つけよう！':'述語を見つけよう！'}</div><div>文の中から、あてはまることばを一つえらんでね。</div></section><section class="sent">${t.map((v,i)=>`<button type="button" class="w" data-index="${i}">${v.text}</button>`).join('')}</section><div id="feedback"></div><div class="note">ことばを一つえらぶと、正解と理由が出ます。</div>`);
+ document.querySelectorAll('.w').forEach(button=>button.addEventListener('click',()=>answer(Number(button.dataset.index))));
+}
+function nextQuestion(){
+ index=(index+1)%ALL.length;
+ const tokens=parse(ALL[index].raw);
+ current={tokens,mode:Math.random()<.5?'s':'p',done:false};
+ show();
+}
+function answer(i){
+ if(current.done)return;current.done=true;
+ const {tokens,mode}=current;
+ const correct=mode==='s'?tokens[i].kind==='s':isPredicate(tokens[i].kind);
+ const answerIndex=tokens.findIndex(t=>mode==='s'?t.kind==='s':isPredicate(t.kind));
+ const buttons=[...document.querySelectorAll('.w')];
+ buttons.forEach((b,j)=>{b.disabled=true;if(j===answerIndex)b.classList.add(mode==='s'?'correct-subject':'correct-predicate');});
+ if(!correct)buttons[i].classList.add('wrong');
+ const feedback=document.getElementById('feedback');
+ feedback.innerHTML=ruby(`<div class="feedback ${correct?'ok':'ng'}">${correct?'◎ せいかい！':'おしい！正解を見てみよう。'}<br>${explanation(tokens,i,mode,correct)}</div><div class="actions"><button type="button" class="next" id="next">次の問題へ</button></div>`);
+ document.getElementById('next').addEventListener('click',nextQuestion);
+}
+nextQuestion();
+</script></main></body></html>
