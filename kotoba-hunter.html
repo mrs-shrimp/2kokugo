@@ -406,6 +406,27 @@ button:focus-visible,input:focus-visible{outline-color:#e6ae25;box-shadow:0 0 0 
 .decor-replace-choice:disabled{opacity:.4}
 @media(max-width:460px){.camp-decor-slot{width:23%;height:92px;bottom:26px}.decor-left-near{left:18%}.decor-right-near{right:18%}.decor-replace-grid{grid-template-columns:1fr}.camp-shop-visual.decor-visual{height:235px}}
 
+/* ===== Camp item resize (おおきさを かえる) ===== */
+.camp-main-tent-wrap{transform:translateX(-50%) scale(var(--s,1));transform-origin:center bottom;transition:transform .15s ease}
+.camp-decor-slot{transform:scale(var(--s,1));transform-origin:center bottom}
+.camp-decor-slot.decor-left-edge{transform-origin:left bottom}
+.camp-decor-slot.decor-right-edge{transform-origin:right bottom}
+.camp-decor-slot:hover{transform:translateY(-4px) scale(calc(var(--s,1)*1.04))}
+.camp-resize-on .camp-decor-slot:hover{transform:scale(var(--s,1))}
+.camp-resize-on .resize-target{cursor:pointer;outline:3px dashed #ffffffd9;outline-offset:3px;border-radius:14px;background:#ffffff26}
+.camp-resize-on .resize-target.resize-selected{outline:4px solid #f5c453;background:#fff6cc40;box-shadow:0 0 0 6px #f5c45355}
+.camp-resize-start{margin-top:13px}
+.camp-resize-bar{margin-top:13px;padding:14px;background:#fffbe8;border:2px solid #f0d98a;border-radius:18px}
+.camp-resize-title{font-size:14px;font-weight:900;color:#5a4a1c}
+.camp-resize-title strong{font-size:16px;color:#2b5b42}
+.camp-resize-row{display:flex;align-items:center;justify-content:center;gap:10px;margin:12px 0;flex-wrap:wrap}
+.camp-resize-row button{min-height:54px;min-width:128px;font-size:16px}
+.camp-scale-label{min-width:76px;text-align:center;font-size:24px;font-weight:950;color:#2b5b42}
+.camp-resize-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.camp-resize-actions button{min-height:54px;min-width:128px;font-size:16px}
+@media(max-width:460px){.camp-resize-row button,.camp-resize-actions button{min-width:0;flex:1 1 40%}}
+/* ===== End camp item resize ===== */
+
 </style>
 </head>
 <body>
@@ -487,7 +508,7 @@ const HIRAGANA_SUGGESTIONS = {'分類':'なかま分け','選択':'えらぶ','�
 const STATIC_TEXTS = [
  'ことばハンター','ことばを あつめて、ことばの たんけんに でかけよう！','なまえ','ひらがなで なまえを いれてね','ぼうけんを はじめる','ホーム','ホームへ','もどる','せってい','なかまのもり','はんたいさん','ことばのいずみ','オノマトペどうくつ','ことばのそうげん','ぼうけんモード','れんしゅうモード','にがてこくふくモード','ことばずかん','がくしゅうきろく','せいかい！','おしい！','ヒントをみる','もういちど','こたえをみる','つぎの もんだい','おつかれさま！','ほぞんする','なまえを かえる','おと','うごきを すくなくする','リセット','チェックする','もじチェック','ハンターカード','レベル','けいけんち','プレイかいすう','クリアした エリア','つぎの レベルまで','あつめた しょうごう','きょうは なにを する？','ぼうけんを つづける','ぼうけんへ','れんしゅうする','にがてを みる','ハンターの きろく','どの エリアへ いく？','1かい 10もん。じかんは きにせず かんがえよう。','せいかい！ ことばを ひとつ ゲット！','おしい！ もういちど かんがえよう','ヒントだよ','おつかれさま！','たんけんの けっか','ふくしゅうしよう','まだ であっていない','であった','さいしょに せいかい','ぜんぶ','しぼりこみ','さいきんの ぼうけん','この ことばの はんたいは？','ことばを ひとつ おして、あう はこを おしてね。','それいがい','ほかの なかま','なかまでは ない','いいね！ ひとつ わけられたよ。','おっと、ちがう はこみたい。ことばを よくみて、もういちど やってみよう。','ぜんぶ わけられたよ！','エリアで しぼる','きろくで しぼる','こたえた かいすう','せいかい','ふくしゅう','なまえを おしえてね','もうすこし！','クリア！','けっかを みよう','こたえを みる','リセット','ON','OFF','おみせ','コイン','コインを ためよう','ことばの はっけん','であった ことば','ハンターの キャンプ','キャンプを かざろう','そうびする','はずす','かう','そうびちゅう','コインが たりないよ','ホームへ もどる','ことばの たから','おみせへ','ずかんを みる','はいけいと テントの おみせ','5つの はいけい','5つの テント','せかいを えらぼう','レベルアップで ひろがる','はいけいは かうと すぐに きりかえられるよ','はいけい：','テント：','いまの はいけい','いまの テント','せっていちゅう','この はいけいに する','この テントに する','レベル で かえる','はじめから','コインで かえる もの'
 ];
-const DEFAULT_STATE = () => ({version:SAVE_VERSION,playerName:'',xp:0,level:1,coins:0,coinAwardedQuestionIds:[],ownedShopItems:[],equippedShopItems:{},ownedBackgrounds:['bg1'],ownedTents:['tent1'],equippedBackground:'bg1',equippedTent:'tent1',ownedCampDecor:[],campDecorCounts:{},campDecorSlots:{},earnedTitles:[],clearedAreas:[],clearedMissions:[],seenQuestionIds:[],xpAwardedQuestionIds:[],questionStats:{},wordStats:{},answerHistory:[],sessions:[],playCount:0,soundOn:false,reduceMotion:false,activeSession:null,lastScreen:'home'});
+const DEFAULT_STATE = () => ({version:SAVE_VERSION,playerName:'',xp:0,level:1,coins:0,coinAwardedQuestionIds:[],ownedShopItems:[],equippedShopItems:{},ownedBackgrounds:['bg1'],ownedTents:['tent1'],equippedBackground:'bg1',equippedTent:'tent1',ownedCampDecor:[],campDecorCounts:{},campDecorSlots:{},campScales:{},earnedTitles:[],clearedAreas:[],clearedMissions:[],seenQuestionIds:[],xpAwardedQuestionIds:[],questionStats:{},wordStats:{},answerHistory:[],sessions:[],playCount:0,soundOn:false,reduceMotion:false,activeSession:null,lastScreen:'home'});
 let appState = null;
 let page = 'welcome';
 let selectedMode = 'practice';
@@ -498,6 +519,43 @@ let storageWarning = '';
 let pendingDecorId = '';
 let pendingDecorSlot = '';
 let activeDecorActionSlot = '';
+let campEditMode=false;
+let campEditKey='';
+let campEditDraft={};
+function campScaleLimits(key){return key==='tent'?{min:.5,max:1.3}:{min:.5,max:1.6};}
+function getCampScale(key){
+ const srcObj=campEditMode?campEditDraft:((appState&&appState.campScales)||{});
+ const v=Number(srcObj[key]);
+ return Number.isFinite(v)&&v>0?v:1;
+}
+function campScaleStyle(key){const s=getCampScale(key);return s===1?'':` style="--s:${s}"`;}
+function campItemName(key){
+ if(key==='tent')return getCampTent(appState.equippedTent).name;
+ const item=CAMP_DECOR.find(x=>x.id===(appState.campDecorSlots||{})[key]);
+ return item?item.name:'';
+}
+function rerenderKeepScroll(){const y=window.scrollY;render();window.scrollTo(0,y);}
+function updateCampResizeDom(){
+ document.querySelectorAll('[data-scale-key]').forEach(el=>{
+  const s=getCampScale(el.dataset.scaleKey);
+  if(s===1)el.style.removeProperty('--s');else el.style.setProperty('--s',String(s));
+  el.classList.toggle('resize-selected',campEditMode&&el.dataset.scaleKey===campEditKey);
+ });
+ const label=document.getElementById('campScaleLabel');
+ const up=document.querySelector('[data-action="campScaleUp"]');
+ const down=document.querySelector('[data-action="campScaleDown"]');
+ const reset=document.querySelector('[data-action="campScaleReset"]');
+ if(!campEditKey){
+  if(label)label.textContent='—';
+  if(up)up.disabled=true;if(down)down.disabled=true;if(reset)reset.disabled=true;
+  return;
+ }
+ const lim=campScaleLimits(campEditKey),s=getCampScale(campEditKey);
+ if(label)label.textContent=Math.round(s*100)+'%';
+ if(up)up.disabled=s>=lim.max-0.001;
+ if(down)down.disabled=s<=lim.min+0.001;
+ if(reset)reset.disabled=Math.abs(s-1)<0.001;
+}
 let newlyEarnedXP = 0;
 let lastLevel = 1;
 let feedbackTimer = null;
@@ -559,6 +617,13 @@ function safeLoad(){
     kept++;
     if(kept>merged.campDecorCounts[item.id])delete merged.campDecorSlots[slot];
    }
+  }
+  if(!merged.campScales||typeof merged.campScales!=='object'||Array.isArray(merged.campScales))merged.campScales={};
+  for(const key of Object.keys(merged.campScales)){
+   const validKey=key==='tent'||['leftEdge','leftNear','rightNear','rightEdge'].includes(key);
+   const lim=campScaleLimits(key);const v=Number(merged.campScales[key]);
+   if(!validKey||!Number.isFinite(v)||(key!=='tent'&&!merged.campDecorSlots[key]))delete merged.campScales[key];
+   else merged.campScales[key]=Math.min(lim.max,Math.max(lim.min,Math.round(v*10)/10));
   }
   merged.answerHistory=merged.answerHistory.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).slice(-1200);
   merged.sessions=merged.sessions.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).slice(-300);
@@ -647,7 +712,7 @@ function init(){
  if(appState.activeSession){page='question';}else{page=appState.playerName?'home':'welcome';}
  render();
 }
-function setPage(next){page=next;render();window.scrollTo({top:0,behavior:appState.reduceMotion?'auto':'smooth'});}
+function setPage(next){campEditMode=false;campEditKey='';page=next;render();window.scrollTo({top:0,behavior:appState.reduceMotion?'auto':'smooth'});}
 function topbar(){return `<div class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M24 4 29 18 43 24 29 29 24 44 18 29 4 24 18 18 24 4Z" fill="#F5C453" stroke="#FFF6CE" stroke-width="2"/><circle cx="24" cy="24" r="5" fill="#fff"/><path d="M24 19v10M19 24h10" stroke="#1E6550" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="brand-name">ことばハンター</div><div class="brand-sub">ことばを あつめる たんけん</div></div></div><div class="top-actions">${page!=='home'&&page!=='welcome'?'<button class="tiny-btn" data-action="home">ホーム</button>':''}<button class="tiny-btn" data-action="settings">せってい</button></div></div>`;}
 function hero(extra=''){return `<section class="hero"><div class="hero-inner"><span class="eyebrow">🌿 ことばの たんけんへ</span><h1>ことば<br>ハンター</h1><p>ことばを あつめて、きもちや ようすを もっと じょうずに つたえよう。</p>${extra}</div><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 180 170" fill="none"><path d="M20 145Q45 110 73 143Q112 98 158 140" fill="#B8D98C"/><path d="M42 134Q26 90 58 71Q80 102 55 129" fill="#85C57A" stroke="#DFF2C8" stroke-width="3"/><path d="M93 139Q79 87 116 54Q142 93 113 135" fill="#C5E3A1" stroke="#E6F4CE" stroke-width="3"/><path d="M70 139Q60 108 87 92Q105 118 83 139" fill="#6EB67A"/><circle cx="129" cy="38" r="20" fill="#F5C453"/><path d="M125 36q4-5 8 0M126 44q3 3 6 0" stroke="#674B19" stroke-width="2.5" stroke-linecap="round"/><path d="M119 23l-5-6M139 22l5-7M150 38h7" stroke="#FFF2B6" stroke-width="3" stroke-linecap="round"/><path d="M25 60l5-10 5 10 10 5-10 5-5 10-5-10-10-5 10-5Z" fill="#FCEAA3"/></svg></div></section>`;}
 function homeHero(extra=''){
@@ -681,7 +746,10 @@ function renderCampDecorSlots(){
  return positions.map(pos=>{
   const item=CAMP_DECOR.find(x=>x.id===(appState.campDecorSlots||{})[pos.id]);
   if(!item)return `<div class="camp-decor-slot ${pos.cls}" aria-label="${pos.label}（空き）"></div>`;
-  return `<div class="camp-decor-slot ${pos.cls}" role="button" tabindex="0" data-action="clickCampDecor" data-slot="${pos.id}" aria-label="${esc(item.name)}。クリックして、べつのアイテムにするか、かたづける" title="${esc(item.name)}"><img src="${esc(item.image)}" alt="${esc(item.name)}" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>${item.icon}</span></div>`;
+  const selected=campEditMode&&campEditKey===pos.id;
+  const act=campEditMode?`data-action="selectCampItem" data-key="${pos.id}"`:`data-action="clickCampDecor"`;
+  const lbl=campEditMode?`${esc(item.name)}。クリックして おおきさを かえる ものに えらぶ`:`${esc(item.name)}。クリックして、べつのアイテムにするか、かたづける`;
+  return `<div class="camp-decor-slot ${pos.cls}${campEditMode?' resize-target':''}${selected?' resize-selected':''}" role="button" tabindex="0" ${act} data-slot="${pos.id}" data-scale-key="${pos.id}"${campScaleStyle(pos.id)} aria-label="${lbl}" title="${esc(item.name)}"><img src="${esc(item.image)}" alt="${esc(item.name)}" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>${item.icon}</span></div>`;
  }).join('');
 }
 function renderCampDecorCard(item){
@@ -705,7 +773,7 @@ function renderDecorActionModal(){
  if(!activeDecorActionSlot)return '';
  const item=CAMP_DECOR.find(x=>x.id===(appState.campDecorSlots||{})[activeDecorActionSlot]);
  if(!item)return '';
- return `<div class="decor-action-backdrop" role="presentation"><section class="decor-action-dialog" role="dialog" aria-modal="true" aria-labelledby="decorActionTitle"><h2 id="decorActionTitle">${esc(item.name)}</h2><p class="muted">どうする？</p><div class="decor-action-buttons"><button class="secondary" data-action="startReplaceCampDecor" data-slot="${activeDecorActionSlot}">べつの アイテムにする</button><button class="danger-btn" data-action="removeCampDecor" data-slot="${activeDecorActionSlot}">かたづける</button><button class="soft-btn" data-action="cancelDecorAction">やめる</button></div></section></div>`;
+ return `<div class="decor-action-backdrop" role="presentation"><section class="decor-action-dialog" role="dialog" aria-modal="true" aria-labelledby="decorActionTitle"><h2 id="decorActionTitle">${esc(item.name)}</h2><p class="muted">どうする？</p><div class="decor-action-buttons"><button class="secondary" data-action="startCampResize" data-slot="${activeDecorActionSlot}">おおきさを かえる</button><button class="secondary" data-action="startReplaceCampDecor" data-slot="${activeDecorActionSlot}">べつの アイテムにする</button><button class="danger-btn" data-action="removeCampDecor" data-slot="${activeDecorActionSlot}">かたづける</button><button class="soft-btn" data-action="cancelDecorAction">やめる</button></div></section></div>`;
 }
 function renderDecorReplacementPicker(){
  if(!pendingDecorSlot)return '';
@@ -720,7 +788,15 @@ function scrollCampIntoView(){
 function renderCampPreview(onShopPage=false){
  const background=getCampBackground(appState.equippedBackground);
  const tent=getCampTent(appState.equippedTent);
- return `<section class="panel camp-panel"><div class="panel-head"><div><div class="section-label">じぶんだけの ばしょ</div><h2>ハンターの キャンプ</h2><p class="muted">はいけいと テントを えらんで、じぶんだけの キャンプに しよう。</p></div><button class="soft-btn" data-action="${onShopPage?'home':'shop'}">${onShopPage?'ホームへ':'おみせへ　🪙'}</button></div><div class="camp-stage camp-stage-scenic" data-background="${background.id}" aria-label="${esc(background.name)}、${esc(tent.name)}を そうびした キャンプ"><img class="camp-background-image" src="${esc(background.image)}" alt="" aria-hidden="true" loading="lazy" onerror="this.hidden=true"><div class="camp-stage-shade" aria-hidden="true"></div><span class="camp-scene-sparkle" aria-hidden="true">✦</span><span class="camp-scene-sparkle second" aria-hidden="true">✧</span>${renderCampDecorSlots()}<div class="camp-main-tent-wrap"><img class="camp-main-tent-image" src="${esc(tent.image)}" alt="${esc(tent.name)}" loading="lazy" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="camp-tent-fallback" aria-hidden="true">${tent.icon}</span></div></div></section>`;
+ return `<section class="panel camp-panel"><div class="panel-head"><div><div class="section-label">じぶんだけの ばしょ</div><h2>ハンターの キャンプ</h2><p class="muted">はいけいと テントを えらんで、じぶんだけの キャンプに しよう。</p></div><button class="soft-btn" data-action="${onShopPage?'home':'shop'}">${onShopPage?'ホームへ':'おみせへ　🪙'}</button></div><div class="camp-stage camp-stage-scenic${campEditMode?' camp-resize-on':''}" data-background="${background.id}" aria-label="${esc(background.name)}、${esc(tent.name)}を そうびした キャンプ"><img class="camp-background-image" src="${esc(background.image)}" alt="" aria-hidden="true" loading="lazy" onerror="this.hidden=true"><div class="camp-stage-shade" aria-hidden="true"></div><span class="camp-scene-sparkle" aria-hidden="true">✦</span><span class="camp-scene-sparkle second" aria-hidden="true">✧</span>${renderCampDecorSlots()}<div class="camp-main-tent-wrap${campEditMode?' resize-target':''}${campEditMode&&campEditKey==='tent'?' resize-selected':''}" data-scale-key="tent"${campScaleStyle('tent')}${campEditMode?' role="button" tabindex="0" data-action="selectCampItem" data-key="tent" aria-label="テントを えらぶ"':''}><img class="camp-main-tent-image" src="${esc(tent.image)}" alt="${esc(tent.name)}" loading="lazy" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="camp-tent-fallback" aria-hidden="true">${tent.icon}</span></div></div>${renderCampResizeControls()}</section>`;
+}
+function renderCampResizeControls(){
+ if(!campEditMode)return `<div class="button-row camp-resize-start"><button class="secondary" data-action="startCampResize">🔍 おおきさを かえる</button></div>`;
+ const name=campEditKey?campItemName(campEditKey):'';
+ const lim=campEditKey?campScaleLimits(campEditKey):{min:.5,max:1.6};
+ const s=campEditKey?getCampScale(campEditKey):1;
+ const none=!campEditKey;
+ return `<div class="camp-resize-bar" role="group" aria-label="おおきさを かえる"><div class="camp-resize-title">${none?'おおきさを かえたい ものを キャンプの なかから タップしてね。':`えらんだ もの：<strong>${esc(name)}</strong>`}</div><div class="camp-resize-row"><button class="secondary" data-action="campScaleDown" ${none||s<=lim.min+0.001?'disabled':''}>ー ちいさく</button><span class="camp-scale-label" id="campScaleLabel" aria-live="polite">${none?'—':Math.round(s*100)+'%'}</span><button class="secondary" data-action="campScaleUp" ${none||s>=lim.max-0.001?'disabled':''}>＋ おおきく</button></div><div class="button-row" style="justify-content:center;margin-bottom:12px"><button class="soft-btn" data-action="campScaleReset" ${none||Math.abs(s-1)<0.001?'disabled':''}>もとの おおきさ</button></div><div class="camp-resize-actions"><button class="soft-btn" data-action="cancelCampResize">やめる</button><button class="primary" data-action="confirmCampResize">けってい</button></div></div>`;
 }
 function renderBackgroundCard(background){
  const coins=Math.max(0,Number(appState.coins)||0);
@@ -912,9 +988,49 @@ function handleAction(action,el){
   const alreadyHere=(appState.campDecorSlots||{})[slot]===item.id;
   if(!alreadyHere&&campDecorAvailable(item.id)<1)return;
   if(!appState.campDecorSlots||typeof appState.campDecorSlots!=='object')appState.campDecorSlots={};
+  if(!alreadyHere&&appState.campScales)delete appState.campScales[slot];
   appState.campDecorSlots[slot]=item.id;pendingDecorId='';activeDecorActionSlot='';pendingDecorSlot='';storageWarning='';saveState();render();requestAnimationFrame(()=>scrollCampIntoView());return;
  }
- if(action==='clickCampDecor'){
+ if(action==='startCampResize'){
+   campEditMode=true;campEditDraft={...(appState.campScales||{})};
+   const slot=el.dataset.slot||'';
+   campEditKey=(slot&&(appState.campDecorSlots||{})[slot])?slot:'';
+   activeDecorActionSlot='';pendingDecorSlot='';pendingDecorId='';
+   rerenderKeepScroll();requestAnimationFrame(()=>scrollCampIntoView());return;
+  }
+  if(action==='selectCampItem'){
+   if(!campEditMode)return;
+   const key=el.dataset.key;
+   if(key==='tent'||(appState.campDecorSlots||{})[key]){campEditKey=key;rerenderKeepScroll();}
+   return;
+  }
+  if(action==='campScaleUp'||action==='campScaleDown'){
+   if(!campEditMode||!campEditKey)return;
+   const lim=campScaleLimits(campEditKey);
+   const next=Math.round((getCampScale(campEditKey)+(action==='campScaleUp'?0.1:-0.1))*10)/10;
+   campEditDraft[campEditKey]=Math.min(lim.max,Math.max(lim.min,next));
+   updateCampResizeDom();return;
+  }
+  if(action==='campScaleReset'){
+   if(!campEditMode||!campEditKey)return;
+   campEditDraft[campEditKey]=1;updateCampResizeDom();return;
+  }
+  if(action==='confirmCampResize'){
+   if(!campEditMode)return;
+   const out={};
+   for(const key of Object.keys(campEditDraft)){
+    const validKey=key==='tent'||(appState.campDecorSlots||{})[key];
+    const lim=campScaleLimits(key);const v=Math.round(Number(campEditDraft[key])*10)/10;
+    if(!validKey||!Number.isFinite(v)||Math.abs(v-1)<0.001)continue;
+    out[key]=Math.min(lim.max,Math.max(lim.min,v));
+   }
+   appState.campScales=out;campEditMode=false;campEditKey='';campEditDraft={};
+   storageWarning='';saveState();rerenderKeepScroll();return;
+  }
+  if(action==='cancelCampResize'){
+   campEditMode=false;campEditKey='';campEditDraft={};rerenderKeepScroll();return;
+  }
+if(action==='clickCampDecor'){
   const slot=el.dataset.slot;
   if(appState.campDecorSlots&&appState.campDecorSlots[slot]){activeDecorActionSlot=slot;pendingDecorId='';pendingDecorSlot='';render();}
   return;
@@ -927,11 +1043,12 @@ function handleAction(action,el){
  if(action==='replaceCampDecor'){
   const slot=el.dataset.slot,id=el.dataset.decor;
   if(!['leftEdge','leftNear','rightNear','rightEdge'].includes(slot)||!CAMP_DECOR.some(x=>x.id===id)||campDecorAvailable(id)<1)return;
+  if(appState.campScales)delete appState.campScales[slot];
   appState.campDecorSlots[slot]=id;pendingDecorSlot='';activeDecorActionSlot='';pendingDecorId='';saveState();render();requestAnimationFrame(()=>scrollCampIntoView());return;
  }
  if(action==='removeCampDecor'){
   const slot=el.dataset.slot;
-  if(appState.campDecorSlots&&['leftEdge','leftNear','rightNear','rightEdge'].includes(slot)){delete appState.campDecorSlots[slot];activeDecorActionSlot='';pendingDecorSlot='';pendingDecorId='';saveState();render();requestAnimationFrame(()=>scrollCampIntoView());}
+  if(appState.campDecorSlots&&['leftEdge','leftNear','rightNear','rightEdge'].includes(slot)){delete appState.campDecorSlots[slot];if(appState.campScales)delete appState.campScales[slot];activeDecorActionSlot='';pendingDecorSlot='';pendingDecorId='';saveState();render();requestAnimationFrame(()=>scrollCampIntoView());}
   return;
  }
  if(action==='cancelDecorPlacement'){pendingDecorId='';render();return;}
@@ -960,7 +1077,7 @@ function handleAction(action,el){
  if(action==='reset'){if(!confirm('ほんとうに リセットする？ けいけんちや ずかん、きろくが ぜんぶ きえるよ。'))return;try{localStorage.removeItem(STORAGE_KEY);}catch(_e){}appState=DEFAULT_STATE();auditResult=null;storageWarning='';setPage('welcome');return;}
 }
 document.getElementById('app').addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(!el||el.disabled)return;handleAction(el.dataset.action,el);});
-document.getElementById('app').addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target.matches('.camp-decor-slot[role="button"]')){event.preventDefault();handleAction('clickCampDecor',event.target);}});
+document.getElementById('app').addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target.matches('.camp-decor-slot[role="button"],.camp-main-tent-wrap[role="button"]')){event.preventDefault();handleAction(event.target.dataset.action||'clickCampDecor',event.target);}});
 window.addEventListener('beforeunload',()=>{if(appState)saveState();});
 init();
 </script>
